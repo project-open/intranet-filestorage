@@ -72,6 +72,7 @@ where
 	and r.profile_id = p.profile_id (+)
 "
     db_foreach project_profiles $project_profile_sql {
+	if {"" == $profile_gif} { set profile_gif "profile" }
 	lappend profiles [list $profile_id $profile_gif $profile_name ]
     }
     return $profiles
