@@ -31,7 +31,8 @@ ad_page_contract {
 set user_id [ad_maybe_redirect_for_registration]
 set base_path [im_filestorage_base_path $folder_type $object_id]
 set context_bar ""
-
+set page_title ""
+set page_content ""
 
 set url_base_list [split $return_url "?"]
 set url_base [lindex $url_base_list 0]
@@ -289,43 +290,89 @@ $dirs_html
 
     "zip" {
 
-	# --------------------- Download a ZIP --------------------- 
+		# --------------------- Download a ZIP --------------------- 
 
-	# Find out where the current directory starts on the hard disk
-	set base_path [im_filestorage_base_path $folder_type $object_id]
-	if {"" == $base_path} {
-	    ad_return_complaint 1 "<LI>[_ intranet-filestorage.lt_Unknown_folder_type_f]"
-	    return
-	}
-	set dest_path "$base_path/$bread_crum_path"
 
-	# Determine a random .tgz file
-	set r [ns_rand 10000000]
-	set file "zip.$user_id.$r.tgz"
-	ns_log Notice "file=$file"
-	set path "/tmp/$file"
-	ns_log Notice "/bin/tar czf $path $dest_path"
-	
-	if { [catch {
-	    exec /bin/tar czf $path $dest_path
-	} err_msg] } {
-	    # Nothing. We check if TAR was successfull if the file exists.
-	}
+		# Find out where the current directory starts on the hard disk
+		set base_path [im_filestorage_base_path $folder_type $object_id]
+		if {"" == $base_path} {
+			ad_return_complaint 1 "<LI>[_ intranet-filestorage.lt_Unknown_folder_type_f]"
+			return
+		}
 
-	if { [catch {
-	    set file_readable [file readable $path]
-	} err_msg] } {
-	    ad_return_complaint 1 "<LI>[_ intranet-filestorage.lt_Unable_to_compress_th]"
-	    return
-	}
+		# Get the list of all relevant roles and profiles for permissions
+		set roles [im_filestorage_roles $user_id $object_id]
+		set profiles [im_filestorage_profiles $user_id $object_id]
 
-	if $file_readable {
-	    ad_returnredirect "/intranet/download/zip/0/$file"
-	    return
-	} else {
-	    doc_return 404 text/html "[_ intranet-filestorage.lt_Did_not_find_the_spec]"
-	    return
-	}
+		# Get the group membership of the current (viewing) user
+		set user_memberships [im_filestorage_user_memberships $user_id $object_id]
+
+		# Get folders with read permission
+		set dest_path ""
+		set folder_sql "
+		select
+			f.path as folder_path
+		from
+			im_fs_folder_perms p,
+			im_fs_folders f
+		where
+			f.object_id = :object_id
+			and p.folder_id = f.folder_id
+			and p.profile_id in ([join $user_memberships ", "])
+			and p.read_p = 1
+	"
+
+		db_foreach get_folders $folder_sql {
+			append dest_path "$base_path/$folder_path "    
+		}    
+
+		# privileged users
+		set object_write 0
+		if {[im_permission $user_id edit_internal_offices]} { 
+			set object_write 1
+		}
+		# Permissions for all usual projects, companies etc.
+		set object_type [db_string acs_object_type "select object_type from acs_objects where object_id=:object_id"]
+		set perm_cmd "${object_type}_permissions \$user_id \$object_id object_view object_read object_write object_admin"
+		eval $perm_cmd
+
+		if { [empty_string_p $dest_path] || $object_write } {
+			set dest_path $base_path/$bread_crum_path
+		}
+
+		# Determine a random .tgz file
+		set r [ns_rand 10000000]
+		set file "zip.$user_id.$r.tgz"
+		ns_log Notice "file=$file"
+		set path "/tmp/$file"
+
+		#build exec command 
+		set tar_command  "/bin/tar czf"
+		lappend tar_command $path
+		lappend tar_command $dest_path
+		ns_log Notice "-----> $tar_command"
+
+		if { [catch {
+			eval "exec [join $tar_command]"
+		} err_msg] } {
+			ns_log Error "------> $err_msg"
+			# Nothing. We check if TAR was successfull if the file exists.
+		}
+
+		if { [catch {
+			set file_readable [file readable $path]
+		} err_msg] } {
+			ad_return_complaint 1 "<LI>[_ intranet-filestorage.lt_Unable_to_compress_th]"
+			return
+		}
+
+		if $file_readable {
+			ad_returnredirect "/intranet/download/zip/0/$file"
+			return
+		} else {
+			doc_return 404 text/html "[_ intranet-filestorage.lt_Did_not_find_the_spec]"
+			return
+		}
     }
 
     "new-folder" {

@@ -224,6 +224,9 @@ ad_proc -public im_filestorage_profile_tds { user_id object_id } {
 # /intranet/download/<group_id>/...
 #
 proc intranet_download { folder_type } {
+    global tcl_platform
+	set platform [lindex $tcl_platform(platform) 0]
+    
     set url "[ns_conn url]"
     set user_id [ad_maybe_redirect_for_registration]
 
@@ -264,7 +267,12 @@ proc intranet_download { folder_type } {
     }
 
     if $file_readable {
-	rp_serve_concrete_file $file
+		if { $platform == "windows" } {
+			rp_serve_concrete_file [acs_root_dir]/../cygwin/$file
+		} else {
+			rp_serve_concrete_file $file		
+		}
+
     } else {
 	doc_return 500 text/html "[_ intranet-filestorage.lt_Did_not_find_the_spec]"
     }
