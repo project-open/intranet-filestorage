@@ -289,6 +289,8 @@ $dirs_html
     }
 
     "zip" {
+		global tcl_platform
+		set platform [lindex $tcl_platform(platform) 0]
 
 		# --------------------- Download a ZIP --------------------- 
 
@@ -359,6 +361,10 @@ $dirs_html
 			# Nothing. We check if TAR was successfull if the file exists.
 		}
 
+	    if { $platform == "windows" } {
+	    	set path "[acs_root_dir]/../cygwin/$path"	
+	    }
+ 
 		if { [catch {
 			set file_readable [file readable $path]
 		} err_msg] } {

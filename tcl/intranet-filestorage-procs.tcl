@@ -246,7 +246,6 @@ proc intranet_download { folder_type } {
 
     set file_comps [lrange $path_list $start_index $len]
     set file_name [join $file_comps "/"]
-    ns_log Notice "file_name=$file_name"
 
     set base_path [im_filestorage_base_path $folder_type $group_id]
     if {"" == $base_path} {
@@ -255,7 +254,12 @@ proc intranet_download { folder_type } {
     }
 
     set file "$base_path/$file_name"
-    ns_log Notice "file=$file"
+    
+    if { $platform == "windows" } {
+    	set file "[acs_root_dir]/../cygwin/$file"	
+    }
+    
+    ns_log Notice "file_name=$file_name file=$file"
 
     if { [catch {
         set file_readable [file readable $file]
@@ -267,14 +271,9 @@ proc intranet_download { folder_type } {
     }
 
     if $file_readable {
-		if { $platform == "windows" } {
-			rp_serve_concrete_file [acs_root_dir]/../cygwin/$file
-		} else {
-			rp_serve_concrete_file $file		
-		}
-
+		rp_serve_concrete_file $file		
     } else {
-	doc_return 500 text/html "[_ intranet-filestorage.lt_Did_not_find_the_spec]"
+		doc_return 500 text/html "[_ intranet-filestorage.lt_Did_not_find_the_spec]"
     }
 }
 
@@ -1192,6 +1191,13 @@ where
 	set file_size "invalid"
 	set file_modified "invalid"
 	set file_extension ""
+	
+	# in windows add install directory to file
+	global tcl_platform 
+	if { [string match $tcl_platform(platform) "windows"] } {
+    	set file "C:/ProjectOpen/cygwin${file}"
+	}
+	
 	if { [catch {
 	    set file_type [file type $file]
 	    set file_size [expr [file size $file] / 1024]
