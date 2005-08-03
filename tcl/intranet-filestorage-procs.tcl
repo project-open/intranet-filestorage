@@ -1191,12 +1191,13 @@ where
 	set file_size "invalid"
 	set file_modified "invalid"
 	set file_extension ""
-	
+
+	# fraber 050803: Nope, doesn't work...
 	# in windows add install directory to file
-	global tcl_platform 
-	if { [string match $tcl_platform(platform) "windows"] } {
-    	set file "C:/ProjectOpen/cygwin${file}"
-	}
+	# global tcl_platform 
+	# if { [string match $tcl_platform(platform) "windows"] } {
+    	#    set file "C:/ProjectOpen/cygwin${file}"
+	#}
 	
 	if { [catch {
 	    set file_type [file type $file]
