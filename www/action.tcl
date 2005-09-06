@@ -307,7 +307,9 @@ $dirs_html
 		set profiles [im_filestorage_profiles $user_id $object_id]
 
 		# Get the group membership of the current (viewing) user
+		# Avoid syntax errors in SQL with empty membership list
 		set user_memberships [im_filestorage_user_memberships $user_id $object_id]
+		lappend user_memberships 0
 
 		# Get folders with read permission
 		set dest_path ""

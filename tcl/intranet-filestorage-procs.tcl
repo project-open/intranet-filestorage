@@ -824,7 +824,7 @@ ad_proc -private im_filestorage_user_memberships { user_id object_id } {
 	where
 		m.member_id = :user_id
 		and m.group_id = p.profile_id
-UNION
+    UNION
 	-- get the list of roles that the current user
 	-- has in his relationship with the object_id
 	select distinct
