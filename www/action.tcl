@@ -52,6 +52,20 @@ ns_set delkey $bind_vars x
 ns_set delkey $bind_vars y
 
 
+# Get the list of all relevant roles and profiles for permissions
+set roles [im_filestorage_roles $user_id $object_id]
+set profiles [im_filestorage_profiles $user_id $object_id]
+
+# Get the group membership of the current (viewing) user
+set user_memberships [im_filestorage_user_memberships $user_id $object_id]
+
+# Get the list of all (known) permission of all folders of the FS
+# of the current object
+set perm_hash_array [im_filestorage_get_perm_hash $user_id $object_id $user_memberships]
+array set perm_hash $perm_hash_array
+
+
+
 foreach var [ad_ns_set_keys $bind_vars] {
     set value [ns_set get $bind_vars $var]
     if {[regexp {first_line_flag} $var]} {
@@ -84,6 +98,12 @@ switch $actions {
             set rel_path $id_path($id)
             set abs_path "$base_path/$rel_path"
             set checked "checked"
+
+	    # Check permissions and skip
+	    set user_perms [im_filestorage_folder_permissions $user_id $object_id $rel_path $user_memberships $roles $profiles $perm_hash_array]
+	    set admin_p [lindex $user_perms 3]
+	    if {!$admin_p} { continue }
+
             incr ctr
             append dirs_html "
 <tr $bgcolor([expr $ctr % 2])>
@@ -169,7 +189,8 @@ $dirs_html
 	    set im_gif_plus_9 [im_gif plus_9]
 	    set page_content "
 <H1>[_ intranet-filestorage.lt_No_Directories_Select]</H1>
-[_ intranet-filestorage.lt_You_have_not_selected]<p>
+[_ intranet-filestorage.lt_You_have_not_selected]<br>
+[lang::message::lookup "" intranet-filestorage.Or_no_permissions_for_folders "Or you don't have permission to administrate any of the folders."]<p>
 [_ intranet-filestorage.lt_Please_backup_select_]<p>
 "
 	}
@@ -193,6 +214,12 @@ $dirs_html
             set rel_path $id_path($id)
             set abs_path "$base_path/$rel_path"
             set checked "checked"
+
+	    # Check permissions and skip
+	    set user_perms [im_filestorage_folder_permissions $user_id $object_id $rel_path $user_memberships $roles $profiles $perm_hash_array]
+	    set admin_p [lindex $user_perms 3]
+#	    if {!$admin_p} { continue }
+
             incr ctr
             append dirs_html "
 <tr $bgcolor([expr $ctr % 2])>
@@ -278,7 +305,8 @@ $dirs_html
 	    set im_gif_plus_9 [im_gif plus_9]
 	    set page_content "
 <H1>[_ intranet-filestorage.lt_No_Directories_Select]</H1>
-[_ intranet-filestorage.lt_You_have_not_selected]<p>
+[_ intranet-filestorage.lt_You_have_not_selected]<br>
+[lang::message::lookup "" intranet-filestorage.Or_no_permissions_for_folders "Or you don't have permission to administrate any of the folders."]<p>
 [_ intranet-filestorage.lt_Please_backup_select_]<p>
 "
 	}
@@ -387,6 +415,14 @@ $dirs_html
 
 	# --------------------- New Folder --------------------- 
 
+	# Check permissions and skip
+	set user_perms [im_filestorage_folder_permissions $user_id $object_id $bread_crum_path $user_memberships $roles $profiles $perm_hash_array]
+	set admin_p [lindex $user_perms 3]
+	if {!$admin_p} {
+	    ad_return_complaint 1 "You don't have permission to create a subdirectory in folder '$bread_crum_path'"
+	    return
+	}
+
         set page_title "[_ intranet-filestorage.New_Folder]"
         set context_bar [im_context_bar $page_title]
 	set page_content "
@@ -407,7 +443,15 @@ $dirs_html
 
     "upload" {
 
-	# --------------------- New Folder --------------------- 
+	# --------------------- Upload --------------------- 
+
+	# Check permissions and skip
+	set user_perms [im_filestorage_folder_permissions $user_id $object_id $bread_crum_path $user_memberships $roles $profiles $perm_hash_array]
+	set write_p [lindex $user_perms 2]
+	if {!$write_p} {
+	    ad_return_complaint 1 "You don't have permission to write to folder '$bread_crum_path'"
+	    return
+	}
 
         set page_title "[_ intranet-filestorage.Upload_File]"
         set context_bar [im_context_bar $page_title]
@@ -474,6 +518,13 @@ $dirs_html
 	    set abs_path "$base_path/$rel_path"
 	    set err_msg ""
             set checked "checked"
+
+
+	    # Check permissions and skip
+	    set user_perms [im_filestorage_folder_permissions $user_id $object_id $rel_path $user_memberships $roles $profiles $perm_hash_array]
+	    set admin_p [lindex $user_perms 3]
+	    if {!$admin_p} { continue }
+
 	    if {![im_filestorage_is_directory_empty $abs_path]} {
 		set err_msg "<font color=red>[_ intranet-filestorage.lt_Directory_is_not_empt]</font>\n"
                 set checked ""

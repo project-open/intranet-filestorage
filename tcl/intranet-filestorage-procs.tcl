@@ -1008,6 +1008,65 @@ where
 }
 
 
+ad_proc -public im_filestorage_folder_permissions { 
+    user_id
+    object_id
+    rel_path
+    user_memberships
+    roles
+    profiles
+    perm_hash_array
+} {
+    Get the userss permissions for a specific path.
+    Returns a list [v r w a].
+} {
+
+    # Loop for all profile memberships of the current user
+    # and "or-join" the permissions together
+    
+    array set profile_perms [im_filestorage_path_perms $rel_path $perm_hash_array $roles $profiles]
+    
+    set user_perms [list 0 0 0 0]
+    foreach profile_id $user_memberships {
+	set hash_key "$profile_id"
+	if {[info exists profile_perms($hash_key)]} {
+	    set perms $profile_perms($hash_key)
+	    set user_perms [im_filestorage_merge_perms $user_perms $perms]
+	}
+    }
+
+    # Give base-object administrators (write permissions to the object)
+    # full access to all files
+    if {$object_id > 0} {
+	
+	# Permissions for all usual projects, companies etc.
+	set object_type [db_string acs_object_type "select object_type from acs_objects where object_id=:object_id"]
+	set perm_cmd "${object_type}_permissions \$user_id \$object_id object_view object_read object_write object_admin"
+	
+	eval $perm_cmd
+	if {$object_write} { set user_perms [list 1 1 1 1] }
+	
+    } else {
+	
+	# The home-component has object_id==0
+	# Set the default permissions as "read"
+	set object_view 1
+	set object_read 1
+	set object_write 0
+	set object_admin 0
+	
+	# Check if the user has more permissions:
+	# We use "edit_internal_offices", because the home FS belongs
+	# to the "internal offices". Well, not 100%, but that's fairly ok..
+	if {[im_permission $user_id edit_internal_offices]} { 
+	    set object_write 1
+	}
+	if {$object_write} { set user_perms [list 1 1 1 1] }
+	
+    }
+
+    return $user_perms
+}
 
 
 
@@ -1268,49 +1327,7 @@ where
 	# ----------------------------------------------------
 	# Determine access permissions
 
-	# Loop for all profile memberships of the current user
-	# and "or-join" the permissions together
-
-	array set profile_perms [im_filestorage_path_perms $rel_path $perm_hash_array $roles $profiles]
-
-	set user_perms [list 0 0 0 0]
-	foreach profile_id $user_memberships {
-	    set hash_key "$profile_id"
-	    if {[info exists profile_perms($hash_key)]} {
-		set perms $profile_perms($hash_key)
-		set user_perms [im_filestorage_merge_perms $user_perms $perms]
-	    }
-	}
-
-	# Give base-object administrators (write permissions to the object)
-	# full access to all files
-	if {$object_id > 0} {
-	    
-	    # Permissions for all usual projects, companies etc.
-	    set object_type [db_string acs_object_type "select object_type from acs_objects where object_id=:object_id"]
-	    set perm_cmd "${object_type}_permissions \$user_id \$object_id object_view object_read object_write object_admin"
-	    
-	    eval $perm_cmd
-	    if {$object_write} { set user_perms [list 1 1 1 1] }
-
-	} else {
-
-	    # The home-component has object_id==0
-	    # Set the default permissions as "read"
-	    set object_view 1
-	    set object_read 1
-	    set object_write 0
-	    set object_admin 0
-	    
-	    # Check if the user has more permissions:
-	    # We use "edit_internal_offices", because the home FS belongs
-	    # to the "internal offices". Well, not 100%, but that's fairly ok..
-	    if {[im_permission $user_id edit_internal_offices]} { 
-		set object_write 1
-	    }
-	    if {$object_write} { set user_perms [list 1 1 1 1] }
-
-	}
+	set user_perms [im_filestorage_folder_permissions $user_id $object_id $rel_path $user_memberships $roles $profiles $perm_hash_array]
 
 	# Don't even enter into the folder/file procs if the user shoudln't see it
 	set view_p [lindex $user_perms 0]
