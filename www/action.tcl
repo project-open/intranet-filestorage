@@ -190,7 +190,7 @@ $dirs_html
 	    set page_content "
 <H1>[_ intranet-filestorage.lt_No_Directories_Select]</H1>
 [_ intranet-filestorage.lt_You_have_not_selected]<br>
-[lang::message::lookup "" intranet-filestorage.Or_no_permissions_for_folders "Or you don't have permission to administrate any of the folders."]<p>
+[lang::message::lookup "" intranet-filestorage.Or_no_permissions_for_items "Or you don't have permission to administrate any of the items."]<p>
 [_ intranet-filestorage.lt_Please_backup_select_]<p>
 "
 	}
@@ -306,7 +306,7 @@ $dirs_html
 	    set page_content "
 <H1>[_ intranet-filestorage.lt_No_Directories_Select]</H1>
 [_ intranet-filestorage.lt_You_have_not_selected]<br>
-[lang::message::lookup "" intranet-filestorage.Or_no_permissions_for_folders "Or you don't have permission to administrate any of the folders."]<p>
+[lang::message::lookup "" intranet-filestorage.Or_no_permissions_for_items "Or you don't have permission to administrate any of the items."]<p>
 [_ intranet-filestorage.lt_Please_backup_select_]<p>
 "
 	}
@@ -504,6 +504,18 @@ $dirs_html
 
 	set files_html ""
 	foreach id [array names file_id] {
+
+	    set file_path $id_path($id)
+	    set file_path_list [split $file_path {/}]
+	    set len [expr [llength $file_path_list] - 2]
+	    set path_list [lrange $file_path_list 0 $len]
+	    set path [join $path_list "/"]
+
+	    # Check permissions
+	    set user_perms [im_filestorage_folder_permissions $user_id $object_id $path $user_memberships $roles $profiles $perm_hash_array]
+	    set admin_p [lindex $user_perms 3]
+	    if {!$admin_p} { continue }
+
 	    incr ctr
 	    append files_html "<tr $bgcolor([expr $ctr % 2])>
 <td>
@@ -561,6 +573,7 @@ Are you sure you really want to delete the following files?
             # Both are empty - show empty help string
             set page_content "
 <h1>[_ intranet-filestorage.Nothing_Selected]</h1>
+[lang::message::lookup "" intranet-filestorage.Or_no_permissions_for_items "Or you don't have permission to administrate any of the items."]<p>
 [_ intranet-filestorage.lt_Please_back_up_and_se]<br>
 [_ intranet-filestorage.lt_by_marking_the_checkb]
 "
