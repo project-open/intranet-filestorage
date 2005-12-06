@@ -923,6 +923,94 @@ ad_proc -public im_filestorage_path_perms { path perm_hash_array roles profiles}
 }
 
 
+ad_proc -public im_filestorage_get_perm_hash { 
+    user_id
+    object_id 
+    user_memberships
+} {
+    Returns a hash (path -> [v r w a]) for all pathes of the
+    current object.
+    This routine is used inside the main filestorage
+    and "stand alone" to determine permission on folders
+    for the add/del permissions screens
+} {
+
+    set last_perm_parent ""
+    set last_perm_parent_depth 0
+    # The root is always readable for everybody
+    set root_path ""
+    set perm_hash($root_path) [list 0 0 0 0]
+
+    # Extract all (path - profile_id) -> permission
+    # information from the DB and store them in a 
+    # hash array for fast access
+    set perm_sql "
+select
+        p.profile_id,
+	f.path as folder_path,
+	p.view_p,
+	p.read_p,
+	p.write_p,
+	p.admin_p
+from
+	im_fs_folder_perms p,
+	im_fs_folders f
+where
+	f.object_id = :object_id
+	and p.folder_id = f.folder_id
+"
+
+    set ctr 0
+    db_foreach perm_init $perm_sql {
+
+	incr ctr
+	set hash_key "$folder_path-$profile_id"
+	
+	if {$view_p} {
+	    set perms [list 1 0 0 0]
+	    if {[info exists perm_hash($hash_key)]} { 
+		set old_perms $perm_hash($hash_key)
+		set perms [im_filestorage_merge_perms $old_perms $perms]
+	    }
+	    set perm_hash($hash_key) $perms
+	}
+	if {$read_p} {
+	    set perms [list 0 1 0 0]
+	    if {[info exists perm_hash($hash_key)]} { 
+		set old_perms $perm_hash($hash_key)
+		set perms [im_filestorage_merge_perms $old_perms $perms]
+	    }
+	    set perm_hash($hash_key) $perms
+	}
+	if {$write_p} {
+	    set perms [list 0 0 1 0]
+	    if {[info exists perm_hash($hash_key)]} { 
+		set old_perms $perm_hash($hash_key)
+		set perms [im_filestorage_merge_perms $old_perms $perms]
+	    }
+	    set perm_hash($hash_key) $perms
+	}
+	if {$admin_p} {
+	    set perms [list 0 0 0 1]
+	    if {[info exists perm_hash($hash_key)]} { 
+		set old_perms $perm_hash($hash_key)
+		set perms [im_filestorage_merge_perms $old_perms $perms]
+	    }
+	    set perm_hash($hash_key) $perms
+	}
+    }
+
+    # Default value if no permissions have been set for
+    # a folder: make everything readable for everybody.
+    if {!$ctr} { set perm_hash($root_path) [list 1 1 1 1]}
+
+    return [array get perm_hash]
+}
+
+
+
+
+
 
 ad_proc -private im_filestorage_render_perms { perm } {
     Returns a formatted HTML like "RW", indicating that
@@ -1093,79 +1181,8 @@ where
     # Get the group membership of the current (viewing) user
     set user_memberships [im_filestorage_user_memberships $user_id $object_id]
 
-    set last_perm_parent ""
-    set last_perm_parent_depth 0
-    # The root is always readable for everybody
-    set root_path ""
-    set perm_hash($root_path) [list 0 0 0 0]
-
-    # Extract all (path - profile_id) -> permission
-    # information from the DB and store them in a 
-    # hash array for fast access
-    set perm_sql "
-select
-        p.profile_id,
-	f.path as folder_path,
-	p.view_p,
-	p.read_p,
-	p.write_p,
-	p.admin_p
-from
-	im_fs_folder_perms p,
-	im_fs_folders f
-where
-	f.object_id = :object_id
-	and p.folder_id = f.folder_id
-"
-
-    set ctr 0
-    db_foreach perm_init $perm_sql {
-
-	incr ctr
-	set hash_key "$folder_path-$profile_id"
-	
-	if {$view_p} {
-	    set perms [list 1 0 0 0]
-	    if {[info exists perm_hash($hash_key)]} { 
-		set old_perms $perm_hash($hash_key)
-		set perms [im_filestorage_merge_perms $old_perms $perms]
-	    }
-	    set perm_hash($hash_key) $perms
-	}
-	if {$read_p} {
-	    set perms [list 0 1 0 0]
-	    if {[info exists perm_hash($hash_key)]} { 
-		set old_perms $perm_hash($hash_key)
-		set perms [im_filestorage_merge_perms $old_perms $perms]
-	    }
-	    set perm_hash($hash_key) $perms
-	}
-	if {$write_p} {
-	    set perms [list 0 0 1 0]
-	    if {[info exists perm_hash($hash_key)]} { 
-		set old_perms $perm_hash($hash_key)
-		set perms [im_filestorage_merge_perms $old_perms $perms]
-	    }
-	    set perm_hash($hash_key) $perms
-	}
-	if {$admin_p} {
-	    set perms [list 0 0 0 1]
-	    if {[info exists perm_hash($hash_key)]} { 
-		set old_perms $perm_hash($hash_key)
-		set perms [im_filestorage_merge_perms $old_perms $perms]
-	    }
-	    set perm_hash($hash_key) $perms
-	}
-    }
-
-    # Default value if no permissions have been set for
-    # a folder: make everything readable for everybody.
-    if {!$ctr} { set perm_hash($root_path) [list 1 1 1 1]}
-
-    # Extract into an array because needs to be passed to
-    # a subroutine frequently (for every line)
-    set perm_hash_array [array get perm_hash]
-
+    set perm_hash_array [im_filestorage_get_perm_hash $user_id $object_id $user_memberships]
+    array set perm_hash $perm_hash_array
 
     # ------------------------------------------------------------------
     # Here we start rendering the file tree
@@ -1255,6 +1272,7 @@ where
 	# and "or-join" the permissions together
 
 	array set profile_perms [im_filestorage_path_perms $rel_path $perm_hash_array $roles $profiles]
+
 	set user_perms [list 0 0 0 0]
 	foreach profile_id $user_memberships {
 	    set hash_key "$profile_id"
@@ -1271,6 +1289,7 @@ where
 	    # Permissions for all usual projects, companies etc.
 	    set object_type [db_string acs_object_type "select object_type from acs_objects where object_id=:object_id"]
 	    set perm_cmd "${object_type}_permissions \$user_id \$object_id object_view object_read object_write object_admin"
+	    
 	    eval $perm_cmd
 	    if {$object_write} { set user_perms [list 1 1 1 1] }
 
