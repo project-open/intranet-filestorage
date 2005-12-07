@@ -837,7 +837,16 @@ ad_proc -private im_filestorage_user_memberships { user_id object_id } {
 		and r.object_id_two = :user_id
 		and r.rel_id = m.rel_id"
 
-    return [db_list user_profiles $sql]
+    set profile_list [db_list user_profiles $sql]
+
+    # Make sure there is atleast on element to the list
+    # in order to avoid errors when using it in a where ...in (...)
+    # statement
+    if {0 == [llength $profile_list]} {
+	set profile_list [list 0]
+    }
+
+    return $profile_list
 }
 
 ad_proc -private im_filestorage_merge_perms { perms1 perms2 } {
