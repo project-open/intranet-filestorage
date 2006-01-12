@@ -572,56 +572,65 @@ ad_proc im_filestorage_project_workflow_dirs { project_type_id } {
     # 94: Trans + Internal Edit
 } {
     ns_log Notice "im_filestorage_project_workflow_dirs: project_type_id=$project_type_id"
+
+    # Localize the workflow stage directories
+    set source [lang::message::lookup "" intranet-translation.Workflow_source_directory "source"]
+    set trans [lang::message::lookup "" intranet-translation.Workflow_trans_directory "trans"]
+    set edit [lang::message::lookup "" intranet-translation.Workflow_edit_directory "edit"]
+    set proof [lang::message::lookup "" intranet-translation.Workflow_proof_directory "proof"]
+    set deliv [lang::message::lookup "" intranet-translation.Workflow_deliv_directory "deliv"]
+    set other [lang::message::lookup "" intranet-translation.Workflow_other_directory "other"]
+
     switch $project_type_id {
 	
 	87 { 
 	    # Trans + Edit
-	    return [list deliv trans edit]
+	    return [list $deliv $trans $edit]
 	}
 
 	88 {
 	    # Edit Only
-	    return [list deliv edit]
+	    return [list $deliv $edit]
 	}
 
 	89 {
 	    # Trans + Edit + Proof
-	    return [list deliv trans edit proof]
+	    return [list $deliv $trans $edit $proof]
 	}
 
 	90 {
 	    # Linguistic
-	    return [list deliv]
+	    return [list $deliv]
 	}
 
 	91 {
 	    # Localization
-	    return [list deliv]
+	    return [list $deliv]
 	}
 
 	92 {
 	    # Technology
-	    return [list deliv]
+	    return [list $deliv]
 	}
 
 	93 {
 	    # Trans Only
-	    return [list deliv trans]
+	    return [list $deliv $trans]
 	}
 
 	94 {
 	    # Trans + Int. Spotcheck
-	    return [list deliv trans edit]
+	    return [list $deliv $trans $edit]
 	}
 
 	95 {
 	    # Proof Only
-	    return [list deliv proof]
+	    return [list $deliv $proof]
 	}
 
 	96 {
 	    # Glossary Compilation
-	    return [list deliv]
+	    return [list $deliv]
 	}
 
 	default {
@@ -638,6 +647,8 @@ ad_proc im_filestorage_create_directories { project_id } {
     Returns "" if successful 
     Returns a formatted errors string otherwise.
 } {
+    # Localize the workflow stage directories
+    set source [lang::message::lookup "" intranet-translation.Workflow_source_directory "source"]
 
     if {[ad_parameter -package_id [im_package_core_id] TestDemoDevServer "" 0]} {
 	# We're at a demo server, so don't create any directories!
@@ -699,7 +710,7 @@ where
     # Create a source language directory
     # if source_language is defined...
     if {"" != $source_language} {
-	set source_dir "$project_dir/source_$source_language"
+	set source_dir "$project_dir/${source}_$source_language"
 	ns_log Notice "im_filestorage_create_directories: source_dir=$source_dir"
 	if {[catch {
 	    if {![file exists $source_dir]} {
