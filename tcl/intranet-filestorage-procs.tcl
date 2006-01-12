@@ -574,12 +574,13 @@ ad_proc im_filestorage_project_workflow_dirs { project_type_id } {
     ns_log Notice "im_filestorage_project_workflow_dirs: project_type_id=$project_type_id"
 
     # Localize the workflow stage directories
-    set source [lang::message::lookup "" intranet-translation.Workflow_source_directory "source"]
-    set trans [lang::message::lookup "" intranet-translation.Workflow_trans_directory "trans"]
-    set edit [lang::message::lookup "" intranet-translation.Workflow_edit_directory "edit"]
-    set proof [lang::message::lookup "" intranet-translation.Workflow_proof_directory "proof"]
-    set deliv [lang::message::lookup "" intranet-translation.Workflow_deliv_directory "deliv"]
-    set other [lang::message::lookup "" intranet-translation.Workflow_other_directory "other"]
+    set locale "en_US"
+    set source [lang::message::lookup $locale intranet-translation.Workflow_source_directory "source"]
+    set trans [lang::message::lookup $locale intranet-translation.Workflow_trans_directory "trans"]
+    set edit [lang::message::lookup $locale intranet-translation.Workflow_edit_directory "edit"]
+    set proof [lang::message::lookup $locale intranet-translation.Workflow_proof_directory "proof"]
+    set deliv [lang::message::lookup $locale intranet-translation.Workflow_deliv_directory "deliv"]
+    set other [lang::message::lookup $locale intranet-translation.Workflow_other_directory "other"]
 
     switch $project_type_id {
 	
@@ -648,7 +649,8 @@ ad_proc im_filestorage_create_directories { project_id } {
     Returns a formatted errors string otherwise.
 } {
     # Localize the workflow stage directories
-    set source [lang::message::lookup "" intranet-translation.Workflow_source_directory "source"]
+    set locale "en_US"
+    set source [lang::message::lookup $locale intranet-translation.Workflow_source_directory "source"]
 
     if {[ad_parameter -package_id [im_package_core_id] TestDemoDevServer "" 0]} {
 	# We're at a demo server, so don't create any directories!
