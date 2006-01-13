@@ -1,4 +1,4 @@
-# /www/intranet/filestorage04/folder_state_update.tcl
+# /packages/intranet-filestorage/www/folder_status_update.tcl
 
 ad_page_contract {
     Index page of filestorage
