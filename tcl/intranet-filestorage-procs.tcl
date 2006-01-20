@@ -1024,7 +1024,14 @@ where
 
     # Default value if no permissions have been set for
     # a folder: make everything readable for everybody.
-    if {!$ctr} { set perm_hash($root_path) [list 1 1 1 1]}
+    if {!$ctr} { 
+	set view [im_permission $user_id fs_root_view]
+	set read [im_permission $user_id fs_root_read]
+	set write [im_permission $user_id fs_root_write]
+	set admin [im_permission $user_id fs_root_admin]
+
+	set perm_hash($root_path) [list $view $read $write $admin]
+    }
 
     return [array get perm_hash]
 }
