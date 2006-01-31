@@ -254,11 +254,6 @@ proc intranet_download { folder_type } {
     }
 
     set file "$base_path/$file_name"
-    
-    if { $platform == "windows" } {
-    	set file "[acs_root_dir]/../cygwin/$file"	
-    }
-    
     ns_log Notice "file_name=$file_name file=$file"
 
     if { [catch {
