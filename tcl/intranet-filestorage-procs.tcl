@@ -521,23 +521,15 @@ ad_proc im_filestorage_company_path { company_id } {
     Determine the location where the project files
     are stored on the hard disk
 } {
-    return [util_memoize "im_filestorage_company_path_helper $company_id"]
+    return [im_filestorage_company_path_helper $company_id]
+#    return [util_memoize "im_filestorage_company_path_helper $company_id"]
 }
 
 ad_proc im_filestorage_company_path_helper { company_id } {
     Determine the location where the project files
     are stored on the hard disk
 } {
-    set package_key "intranet-filestorage"
-    set package_id [db_string package_id "select package_id from apm_packages where package_key=:package_key" -default 0]
-    set base_path_unix [parameter::get -package_id $package_id -parameter "CompanyBasePathUnix" -default "/tmp/companies"]
-
-    # Return a demo path for all project, clients etc.
-    if {[ad_parameter -package_id [im_package_core_id] TestDemoDevServer "" 0]} {
-	set path [ad_parameter "TestDemoDevPath" "" "companies"]
-	ns_log Notice "im_filestorage_project_path: TestDemoDevServer: $path"
-	return "$base_path_unix/$path"
-    }
+    set base_path_unix [parameter::get -package_id [im_package_filestorage_id] -parameter "CompanyBasePathUnix" -default "/tmp/companies"]
 
     set company_path "undefined"
     if {[catch {
