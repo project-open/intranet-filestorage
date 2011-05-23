@@ -1102,6 +1102,17 @@ ad_proc export_url_bind_vars { bind_vars } {
     set vars ""
     set ctr 0
     foreach var [ad_ns_set_keys $bind_vars] {
+	
+	# Security check for cross site scripting
+        if {![regexp {^[a-zA-Z0-9_\-]*$} $var]} {
+            im_security_alert \
+                -location export_url_bind_vars \
+                -message "Invalid URL var characters" \
+                -value [ns_quotehtml $var]
+            # Quote the harmful vars
+            regsub -all {[^a-zA-Z0-9_\-]} $var "_" var
+        }
+
 	set value [ns_set get $bind_vars $var]
 	if {$ctr > 0} { append vars "&" }
 	append vars "$var=[ns_urlencode $value]"
