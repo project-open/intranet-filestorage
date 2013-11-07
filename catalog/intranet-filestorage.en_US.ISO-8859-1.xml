@@ -59,6 +59,7 @@
   <msg key="Submit_and_Upload">Submit and Upload</msg>
   <msg key="Upload_a_file">Upload a file</msg>
   <msg key="Upload_File">Upload File</msg>
+  <msg key="Upload_ZIP">Upload ZIP</msg>
   <msg key="View">View</msg>
   <msg key="Write">Write</msg>
 </message_catalog>
