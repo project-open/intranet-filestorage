@@ -19,7 +19,6 @@ ad_page_contract {
     {description ""}
 } 
 
-
 set user_id [ad_maybe_redirect_for_registration]
 set user_is_admin_p [im_is_user_site_wide_or_intranet_admin $user_id]
 set page_title "Upload into '$bread_crum_path'"
@@ -37,7 +36,6 @@ set user_memberships [im_filestorage_user_memberships $user_id $object_id]
 # of the current object
 set perm_hash_array [im_filestorage_get_perm_hash $user_id $object_id $user_memberships]
 array set perm_hash $perm_hash_array
-
 
 
 # Check bread_crum_path
@@ -80,11 +78,14 @@ if { $exception_count > 0 } {
     return 0
 }
 
-
 # Get the file from the user.
 # number_of_bytes is the upper-limit
 set max_n_bytes [ad_parameter -package_id [im_package_filestorage_id] MaxNumberOfBytes "" 0]
 set tmp_filename [ns_queryget upload_file.tmpfile]
+if { 0 == [file size $tmp_filename] } {
+    ad_return_complaint 1 [lang::message::lookup "" intranet-filestorage.FileNotFound "You did not select a file or the file you are trying to upload is empty."]
+    ad_script_abort
+}
 im_security_alert_check_tmpnam -location "upload-2" -value $tmp_filename
 ns_log Notice "upload-2: tmp_filename=$tmp_filename"
 
