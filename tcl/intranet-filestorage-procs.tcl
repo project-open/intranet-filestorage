@@ -23,6 +23,7 @@ ad_library {
 
 ad_register_proc GET /intranet/download/project/* intranet_project_download
 ad_register_proc GET /intranet/download/ticket/* intranet_ticket_download
+ad_register_proc GET /intranet/download/event/* intranet_event_download
 ad_register_proc GET /intranet/download/project_sales/* intranet_project_sales_download
 ad_register_proc GET /intranet/download/company/* intranet_company_download
 ad_register_proc GET /intranet/download/user/* intranet_user_download
@@ -37,6 +38,7 @@ ad_proc im_file_action_download {} { return 2421 }
 
 ad_proc intranet_project_download {} { intranet_download "project" }
 ad_proc intranet_ticket_download {} { intranet_download "ticket" }
+ad_proc intranet_event_download {} { intranet_download "event" }
 ad_proc intranet_project_sales_download {} { intranet_download "project_sales" }
 ad_proc intranet_company_download {} { intranet_download "company" }
 ad_proc intranet_user_download {} { intranet_download "user" }
@@ -334,6 +336,7 @@ ad_proc -private im_filestorage_base_path_helper {
     switch $folder_type {
 	project {return [im_filestorage_project_path $object_id]}
 	ticket {return [im_filestorage_ticket_path $object_id]}
+	event {return [im_filestorage_event_path $object_id]}
 	project_sales {return [im_filestorage_project_sales_path $object_id]}
 	company {return [im_filestorage_company_path $object_id]}
 	user {return [im_filestorage_user_path $object_id]}
@@ -402,6 +405,17 @@ ad_proc im_filestorage_ticket_component { user_id ticket_id ticket_name return_u
     set object_name [lang::message::lookup "" intranet-filestorage.Folder_type_Ticket "Ticket"]
     return [im_filestorage_base_component $user_id $ticket_id $object_name $ticket_path $folder_type]
 }
+
+ad_proc im_filestorage_event_component { user_id event_id event_name return_url} {
+    Filestorage for events
+} {
+    set event_path [im_filestorage_event_path $event_id]
+    set folder_type "event"
+    set object_name [lang::message::lookup "" intranet-filestorage.Folder_type_Event "Event"]
+    return [im_filestorage_base_component $user_id $event_id $object_name $event_path $folder_type]
+}
+
+
 
 ad_proc im_filestorage_project_sales_component { user_id project_id project_name return_url} {
     Filestorage for project sales (protected)
@@ -662,6 +676,42 @@ ad_proc im_filestorage_ticket_path_helper { ticket_id } {
     }
 
     return "$base_path_unix/$company_path/$project_path"
+}
+
+
+
+
+ad_proc im_filestorage_event_path { event_id } {
+    Determine the location where the event files
+    are stored on the hard disk for this event
+} {
+#    return [util_memoize "im_filestorage_event_path_helper $event_id"]
+    return [im_filestorage_event_path_helper $event_id]
+}
+
+ad_proc im_filestorage_event_path_helper { event_id } {
+    Determine the location where the event files
+    are stored on the hard disk for this event
+} {
+    set base_path_unix [parameter::get -package_id [im_package_filestorage_id] -parameter "EventBasePathUnix" -default "/tmp/events"]
+
+    # Check if the base_path has a trailing "/" and produce an error:
+    if {[regexp {.\/$} $base_path_unix]} {
+	ad_return_complaint 1 "<br><blockquote>
+             The '$base_path_unix' path for this filestorage contains a trailing slash ('/') at the end.
+             Please notify your system administrator and ask him or her to remove any trailing
+             slashes in the Admin -&gt; Parameters -&gt; 'intranet-filestorage' section.
+        </blockquote><br>
+        "
+	return
+    }
+
+    if {![db_0or1row events_info_query ""]} {
+	ad_return_complaint 1 "Can't find the event with event_id = $event_id"
+	return
+    }
+
+    return "$base_path_unix/$event_id"
 }
 
 
@@ -1630,12 +1680,12 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
     db_foreach hash_query $query {
     	# Hash: Path -> open/closed
 	set open_p_hash($path) $open_p
-	ns_log Notice "$path -> $open_p"
+	# ns_log Notice "im_filestorage_base_component: $path -> $open_p"
 
 	# Hash: Path -> folder_id
 	set folder_id_hash($path) $folder_id
 	set last_folder_id [expr $folder_id * 10]
-	ns_log Notice "$path -> $folder_id"
+	# ns_log Notice "im_filestorage_base_component: $path -> $folder_id"
     }
 
     # ------------------------------------------------------------------
@@ -1713,9 +1763,11 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 	    set file_size [expr [file size $file] / 1024]
 	    set file_modified [ns_fmttime [file mtime $file] "%d/%m/%Y"]
 	    set file_extension [file extension $file]
-	} err_msg] } { }
-	ns_log Notice "file=$file, rel_path=$rel_path, current_depth=$current_depth"
-	ns_log Notice "file_body=$file_body, file_type=$file_type, file_size=$file_size, file_modified=$file_modified"
+	} err_msg] } { 
+	    ns_log Notice "im_filestorage_base_component: err_msg=$err_msg"
+	}
+	# ns_log Notice "im_filestorage_base_component: file=$file, rel_path=$rel_path, current_depth=$current_depth"
+	# ns_log Notice "im_filestorage_base_component: file_body=$file_body, file_type=$file_type, file_size=$file_size, file_modified=$file_modified"
 
 	# Make sure we get always hava an open/close value for the
 	# current directory, even if there was no information about
