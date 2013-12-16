@@ -100,6 +100,18 @@ where
   </fullquery>
 
 
+  <fullquery name="im_filestorage_event_path_helper.events_info_query">
+    <querytext>
+select
+	e.event_nr
+from
+	im_events e
+where
+	e.event_id = :event_id
+    </querytext>
+  </fullquery>
+
+
   <fullquery name="im_filestorage_project_sales_path_helper.projects_info_query">
     <querytext>
 select
