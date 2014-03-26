@@ -24,6 +24,7 @@ set user_is_admin_p [im_is_user_site_wide_or_intranet_admin $user_id]
 set page_title "Upload into '$bread_crum_path'"
 set context_bar [im_context_bar [list "/intranet/projects/" "Projects"]  [list "/intranet/projects/view?group_id=$object_id" "One Project"]  "Upload File"]
 
+if { "" == $upload_file } { ad_return_complaint xx "Please choose a file to upload" }
 
 # Get the list of all relevant roles and profiles for permissions
 set roles [im_filestorage_roles $user_id $object_id]
