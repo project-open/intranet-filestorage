@@ -1195,7 +1195,7 @@ ad_proc export_url_bind_vars { bind_vars } {
     foreach var [ad_ns_set_keys $bind_vars] {
 
 	# Security check for cross site scripting
-	if {![regexp {^[a-zA-Z0-9_\-]*$} $var]} {
+	if {![regexp {^[a-zA-Z0-9_\-\:]*$} $var]} {
 	    im_security_alert \
 		-location export_url_bind_vars \
 		-message "Invalid URL var characters" \
