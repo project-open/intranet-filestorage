@@ -55,7 +55,7 @@ ad_proc intranet_expense_cost_download {} { intranet_download "cost" }
 ad_proc -public im_package_filestorage_id {} {
     Returns the package id of the intranet-filestorage module
 } {
-    return [util_memoize "im_package_filestorage_id_helper"]
+    return [util_memoize im_package_filestorage_id_helper]
 }
 
 ad_proc -private im_package_filestorage_id_helper {} {
@@ -304,7 +304,7 @@ proc intranet_download { folder_type } {
 
 ad_proc -public im_package_filestorage_id { } {
 } {
-    return [util_memoize "im_package_filestorage_id_helper"]
+    return [util_memoize im_package_filestorage_id_helper]
 }
 
 ad_proc -private im_package_filestorage_id_helper {} {
@@ -576,8 +576,7 @@ ad_proc im_filestorage_project_path { project_id } {
     Determine the location where the project files
     are stored on the hard disk for this project
 } {
-#    return [util_memoize "im_filestorage_project_path_helper $project_id"]
-    return [im_filestorage_project_path_helper $project_id]
+    return [util_memoize [list im_filestorage_project_path_helper $project_id]]
 }
 
 ad_proc im_filestorage_project_path_helper { project_id } {
@@ -649,8 +648,7 @@ ad_proc im_filestorage_ticket_path { ticket_id } {
     Determine the location where the ticket files
     are stored on the hard disk for this ticket
 } {
-#    return [util_memoize "im_filestorage_ticket_path_helper $ticket_id"]
-    return [im_filestorage_ticket_path_helper $ticket_id]
+    return [util_memoize "im_filestorage_ticket_path_helper $ticket_id"]
 }
 
 ad_proc im_filestorage_ticket_path_helper { ticket_id } {
@@ -685,8 +683,7 @@ ad_proc im_filestorage_event_path { event_id } {
     Determine the location where the event files
     are stored on the hard disk for this event
 } {
-#    return [util_memoize "im_filestorage_event_path_helper $event_id"]
-    return [im_filestorage_event_path_helper $event_id]
+    return [util_memoize "im_filestorage_event_path_helper $event_id"]
 }
 
 ad_proc im_filestorage_event_path_helper { event_id } {
@@ -719,8 +716,7 @@ ad_proc im_filestorage_project_sales_path { project_id } {
     Determine the location where the project files
     are stored on the hard disk for this project
 } {
-#    return [util_memoize "im_filestorage_project_sales_path_helper $project_id"]
-    return [im_filestorage_project_sales_path_helper $project_id]
+    return [util_memoize "im_filestorage_project_sales_path_helper $project_id"]
 }
 
 ad_proc im_filestorage_project_sales_path_helper { project_id } {
@@ -794,8 +790,7 @@ ad_proc im_filestorage_company_path { company_id } {
     Determine the location where the project files
     are stored on the hard disk
 } {
-    return [im_filestorage_company_path_helper $company_id]
-#    return [util_memoize "im_filestorage_company_path_helper $company_id"]
+    return [util_memoize "im_filestorage_company_path_helper $company_id"]
 }
 
 ad_proc im_filestorage_company_path_helper { company_id } {
@@ -1277,9 +1272,9 @@ ad_proc -public im_filestorage_home_folder_profile_perms {
     Cache the result for 600 seconds, we'll not change home
     folder permissions very frequently...
 } {
-
     # SourceForge Bug 1696693: Empty profile gives error
-    if {"" == $profile_id} {  set profile_id 0 }
+    if {"" == $profile_id} { set profile_id 0 }
+    im_security_alert_check_integer -location "im_filestorage_home_folder_profile_perms" -value $profile_id
 
     set subsite_id [ad_conn subsite_id]
     set path_perms [util_memoize "db_string path_perms \"
