@@ -648,7 +648,7 @@ ad_proc im_filestorage_ticket_path { ticket_id } {
     Determine the location where the ticket files
     are stored on the hard disk for this ticket
 } {
-    return [util_memoize "im_filestorage_ticket_path_helper $ticket_id"]
+    return [util_memoize [list im_filestorage_ticket_path_helper $ticket_id]]
 }
 
 ad_proc im_filestorage_ticket_path_helper { ticket_id } {
@@ -683,7 +683,7 @@ ad_proc im_filestorage_event_path { event_id } {
     Determine the location where the event files
     are stored on the hard disk for this event
 } {
-    return [util_memoize "im_filestorage_event_path_helper $event_id"]
+    return [util_memoize [list im_filestorage_event_path_helper $event_id]]
 }
 
 ad_proc im_filestorage_event_path_helper { event_id } {
@@ -716,7 +716,7 @@ ad_proc im_filestorage_project_sales_path { project_id } {
     Determine the location where the project files
     are stored on the hard disk for this project
 } {
-    return [util_memoize "im_filestorage_project_sales_path_helper $project_id"]
+    return [util_memoize [list im_filestorage_project_sales_path_helper $project_id]]
 }
 
 ad_proc im_filestorage_project_sales_path_helper { project_id } {
@@ -790,7 +790,7 @@ ad_proc im_filestorage_company_path { company_id } {
     Determine the location where the project files
     are stored on the hard disk
 } {
-    return [util_memoize "im_filestorage_company_path_helper $company_id"]
+    return [util_memoize [list im_filestorage_company_path_helper $company_id]]
 }
 
 ad_proc im_filestorage_company_path_helper { company_id } {
@@ -1277,7 +1277,7 @@ ad_proc -public im_filestorage_home_folder_profile_perms {
     im_security_alert_check_integer -location "im_filestorage_home_folder_profile_perms" -value $profile_id
 
     set subsite_id [ad_conn subsite_id]
-    set path_perms [util_memoize "db_string path_perms \"
+    set path_perms [util_memoize [list db_string path_perms "
                 select
                 CASE acs_permission__permission_p($subsite_id, $profile_id, 'fs_root_view')
                 WHEN 't' THEN 1 ELSE 0 END || ' ' ||
@@ -1286,7 +1286,7 @@ ad_proc -public im_filestorage_home_folder_profile_perms {
                 CASE acs_permission__permission_p($subsite_id, $profile_id, 'fs_root_write')
                 WHEN 't' THEN 1 ELSE 0 END || ' ' ||
                 CASE acs_permission__permission_p($subsite_id, $profile_id, 'fs_root_admin')
-                WHEN 't' THEN 1 ELSE 0 END\"" 600]
+                WHEN 't' THEN 1 ELSE 0 END"] 600]
 
     return $path_perms
 }
