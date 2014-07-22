@@ -115,17 +115,21 @@ if {[regexp {\.\.} $client_filename]} {
 
 # ---------- Check for charset compliance -----------
 
+set hint ""
 set filename $client_filename
 set charset [ad_parameter -package_id [im_package_filestorage_id] FilenameCharactersSupported "" "alphanum"]
+
 if {![im_filestorage_check_filename $charset $filename]} {
-    ad_return_complaint 1 [lang::message::lookup "" intranet-filestorage.Invalid_Character_Set "
+    if { "utf8" != $charset } {
+	set hint [lang::message::lookup "" intranet-filestorage.Invalid_Character_SetHint. "Please contact your SysAdministrator. Most likely this problem can be resolved by setting parameter 'FilenameCharactersSupported' to 'utf8'"]
+    }
+
+    ad_return_complaint 1 "[lang::message::lookup "" intranet-filestorage.Invalid_Character_Set "
                 <b>Invalid Character(s) found</b>:<br>
                 Your filename '%filename%' contains atleast one character that is not allowed
-                in your character set '%charset%'."]
+                in your character set '%charset%'."]<br>$hint" 
     ad_script_abort
 }
-
-
 
 
 # ---------- Determine the location where to save the file -----------
