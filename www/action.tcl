@@ -476,7 +476,7 @@ switch $actions {
 	<td align=right>[_ intranet-filestorage.Filename]: </td>
 	<td>
 	  <input type=file name=upload_file size=30>
-[im_gif help "Use the 'Browse...' button to locate your file, then click 'Open'."]
+[im_gif -translate_p 1 help "Use the 'Browse...' button to locate your file, then click 'Open'."]
 	</td>
       </tr>
       <tr>
@@ -551,7 +551,7 @@ switch $actions {
 	<td align=right>[_ intranet-filestorage.Filename]: </td>
 	<td>
 	  <input type=file name=upload_file size=30>
-[im_gif help "Use the 'Browse...' button to locate your file, then click 'Open'."]
+[im_gif -translate_p 1 help "Use the 'Browse...' button to locate your file, then click 'Open'."]
 	</td>
       </tr>
       <tr>

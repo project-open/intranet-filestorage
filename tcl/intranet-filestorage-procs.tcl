@@ -234,13 +234,13 @@ ad_proc -public im_filestorage_profile_tds { user_id object_id } {
     set roles [im_filestorage_roles $user_id $object_id]
     foreach role $roles {
 	ns_log Notice "im_filestorage_profile_tds: role: $role"
-	append profile_icons "<td>[im_gif [lindex $role 1] [lindex $role 2]]</td>\n"
+	append profile_icons "<td>[im_gif -translate_p 1 [lindex $role 1] [lindex $role 2]]</td>\n"
     }
 
     set profiles [im_filestorage_profiles $user_id $object_id]
     foreach profile $profiles {
 	ns_log Notice "im_filestorage_profile_tds: profile: $profile"
-	append profile_icons "<td>[im_gif [lindex $profile 1] [lindex $profile 2]]</td>\n"
+	append profile_icons "<td>[im_gif -translate_p 1 [lindex $profile 1] [lindex $profile 2]]</td>\n"
     }
 
     return $profile_icons
