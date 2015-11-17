@@ -81,7 +81,7 @@ if { $exception_count > 0 } {
 
 # Get the file from the user.
 # number_of_bytes is the upper-limit
-set max_n_bytes [ad_parameter -package_id [im_package_filestorage_id] MaxNumberOfBytes "" 0]
+set max_n_bytes [im_parameter -package_id [im_package_filestorage_id] MaxNumberOfBytes "" 0]
 set tmp_filename [ns_queryget upload_file.tmpfile]
 if { 0 == [file size $tmp_filename] } {
     ad_return_complaint 1 [lang::message::lookup "" intranet-filestorage.FileNotFound "You did not select a file or the file you are trying to upload is empty."]
@@ -117,7 +117,7 @@ if {[regexp {\.\.} $client_filename]} {
 
 set hint ""
 set filename $client_filename
-set charset [ad_parameter -package_id [im_package_filestorage_id] FilenameCharactersSupported "" "alphanum"]
+set charset [im_parameter -package_id [im_package_filestorage_id] FilenameCharactersSupported "" "alphanum"]
 
 if {![im_filestorage_check_filename $charset $filename]} {
     if { "utf8" != $charset } {

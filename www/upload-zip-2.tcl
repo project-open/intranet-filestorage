@@ -75,7 +75,7 @@ if { $exception_count > 0 } {
 
 # Get the file from the user.
 # number_of_bytes is the upper-limit
-set max_n_bytes [ad_parameter -package_id [im_package_filestorage_id] MaxNumberOfBytes "" 0]
+set max_n_bytes [im_parameter -package_id [im_package_filestorage_id] MaxNumberOfBytes "" 0]
 set tmp_filename [ns_queryget upload_file.tmpfile]
 im_security_alert_check_tmpnam -location "upload-2" -value $tmp_filename
 ns_log Notice "upload-zip-2: tmp_filename=$tmp_filename"
@@ -105,7 +105,7 @@ if {[regexp {\.\.} $client_filename]} {
 # ---------- Check for charset compliance -----------
 
 set filename $client_filename
-set charset [ad_parameter -package_id [im_package_filestorage_id] FilenameCharactersSupported "" "alphanum"]
+set charset [im_parameter -package_id [im_package_filestorage_id] FilenameCharactersSupported "" "alphanum"]
 if {![im_filestorage_check_filename $charset $filename]} {
     ad_return_complaint 1 [lang::message::lookup "" intranet-filestorage.Invalid_Character_Set "
                 <b>Invalid Character(s) found</b>:<br>
