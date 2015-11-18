@@ -32,7 +32,7 @@ set alt_msg "Use the &quot;Browse...&quot; button to locate your file, then clic
 
 set page_content "
 <form enctype=multipart/form-data method=POST action=upload-2.tcl>
-[export_form_vars folder folder_type project_id return_url]
+[export_vars -form {folder folder_type project_id return_url}]
 
                     <table border=0>
                       <tr> 

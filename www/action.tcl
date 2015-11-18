@@ -120,7 +120,7 @@ switch $actions {
 	set page_content "
 		<H1>$page_title</H1>
 		<form name=add_perms action=/intranet-filestorage/add-perms-2 method=POST>
-		[export_form_vars object_id folder_type bread_crum_path return_url]
+		[export_vars -form {object_id folder_type bread_crum_path return_url}]
 		<table border=0 cellspacing=0 cellpadding=2>
 		<tr class=rowtitle>
 		  <td></td>
@@ -241,7 +241,7 @@ switch $actions {
 	set page_content "
 		<H1>$page_title</H1>
 		<form action=/intranet-filestorage/del-perms-2 method=POST>
-		[export_form_vars object_id folder_type bread_crum_path return_url]
+		[export_vars -form {object_id folder_type bread_crum_path return_url}]
 		<table border=0 cellspacing=0 cellpadding=2>
 		<tr class=rowtitle>
 		  <td></td>
@@ -465,7 +465,7 @@ switch $actions {
         set context_bar [im_context_bar $page_title]
         set page_content "
 <form enctype=multipart/form-data method=POST action=upload-zip-2.tcl>
-[export_form_vars bread_crum_path folder_type object_id return_url]
+[export_vars -form {bread_crum_path folder_type object_id return_url}]
 
           Upload a ZIP file into directory \"/$bread_crum_path\".<br>
           [_ intranet-filestorage.lt_If_you_want_to_upload] <br>
@@ -511,7 +511,7 @@ switch $actions {
 	set page_content "
 <h1>New Folder</h1>
 <form method='post' action='create-folder-2'>
-[export_form_vars folder_type bread_crum_path object_id return_url]
+[export_vars -form {folder_type bread_crum_path object_id return_url}]
 <table><tr><td>[_ intranet-filestorage.lt_Please_enter_the_name]
 </td></tr>
 <tr><td>
@@ -540,7 +540,7 @@ switch $actions {
         set context_bar [im_context_bar $page_title]
         set page_content "
 <form enctype=multipart/form-data method=POST action=upload-2.tcl>
-[export_form_vars bread_crum_path folder_type object_id return_url]
+[export_vars -form {bread_crum_path folder_type object_id return_url}]
 
           Upload a file into directory \"/$bread_crum_path\".
           [_ intranet-filestorage.lt_If_you_want_to_upload] <br>
@@ -636,7 +636,7 @@ switch $actions {
 <H1>[_ intranet-filestorage.Delete_Files]</H1>
 Are you sure you really want to delete the following files?
 <form action=delete method=POST>
-[export_form_vars object_id bread_crum_path folder_type return_url]
+[export_vars -form {object_id bread_crum_path folder_type return_url}]
 <input type=submit value='[_ intranet-filestorage.Delete]'><p>
 <table border=0 cellpadding=1 cellspacing=1>\n"
 

@@ -1907,7 +1907,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 
     set component_html "
 <form name=\"$folder_type\" method=POST action=\"/intranet-filestorage/action\">
-[export_form_vars object_id bread_crum_path folder_type return_url]
+[export_vars -form {object_id bread_crum_path folder_type return_url}]
 
 <TABLE border=0 cellpadding=0 cellspacing=0>
   <TR  valign=middle class=rowtitle> 
