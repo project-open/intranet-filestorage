@@ -1983,7 +1983,7 @@ ad_proc im_filestorage_dir_row {
 	incr i 
     } 
     set status $open_p
-    append line_html "<a href=/intranet-filestorage/folder_status_update?[export_url_vars status object_id rel_path return_url]>"
+    append line_html "<a href=/intranet-filestorage/folder_status_update?[export_vars -url {status object_id rel_path return_url}]>"
 
     if {$open_p == "o"} {
 	append line_html [im_gif foldin2]
