@@ -28,7 +28,7 @@ ad_page_contract {
 }
 
 # User id already verified by filters
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 set base_path [im_filestorage_base_path $folder_type $object_id]
 set context_bar ""
 set page_title ""
@@ -90,7 +90,7 @@ switch $actions {
 	set profiles [im_filestorage_profiles $user_id $object_id]
 	set roles [im_filestorage_roles $user_id $object_id]
 	set tds [im_filestorage_profile_tds $user_id $object_id]
-	set num_profiles [expr [llength $roles] + [llength $profiles]]
+	set num_profiles [expr {[llength $roles] + [llength $profiles]}]
 
         set dirs_html ""
 	set ctr 0
@@ -106,7 +106,7 @@ switch $actions {
 
             incr ctr
             append dirs_html "
-		<tr $bgcolor([expr $ctr % 2])>
+		<tr $bgcolor([expr {$ctr % 2}])>
 		  <td>
 		    <input type=checkbox name=dir_id.$id $checked>
 		    <input type=hidden name=id_path.$id value=\"$id_path($id)\">
@@ -211,7 +211,7 @@ switch $actions {
 	set profiles [im_filestorage_profiles $user_id $object_id]
 	set roles [im_filestorage_roles $user_id $object_id]
 	set tds [im_filestorage_profile_tds $user_id $object_id]
-	set num_profiles [expr [llength $roles] + [llength $profiles]]
+	set num_profiles [expr {[llength $roles] + [llength $profiles]}]
 
         set dirs_html ""
 	set ctr 0
@@ -227,7 +227,7 @@ switch $actions {
 
             incr ctr
             append dirs_html "
-		<tr $bgcolor([expr $ctr % 2])>
+		<tr $bgcolor([expr {$ctr % 2}])>
 		  <td>
 		    <input type=checkbox name=dir_id.$id $checked>
 		    <input type=hidden name=id_path.$id value=\"$id_path($id)\">
@@ -440,7 +440,7 @@ switch $actions {
 	
 	ns_log Notice "intranet-filestorage/action: file_readable=$file_readable, zip_file_path=$zip_file_path, redirecting to /intranet/download/zip/0/$zip_file"
 
-	if $file_readable {
+	if {$file_readable} {
 	    ad_returnredirect "/intranet/download/zip/0/$zip_file"
 	} else {
 	    ad_return_complaint 1 "[_ intranet-filestorage.lt_Did_not_find_the_spec]<br><pre>$path</pre>"
@@ -571,7 +571,7 @@ switch $actions {
 	# --------------------- Up-Folder --------------------- 
 
 	set bread_crum_list [split $bread_crum_path "/"]
-	set bread_crum_list_upfolder [lrange $bread_crum_list 0 [expr [llength $bread_crum_list] -2]]
+	set bread_crum_list_upfolder [lrange $bread_crum_list 0 [llength $bread_crum_list]-2]
 	set bread_crum_path_upfolder [join $bread_crum_list_upfolder "/"]
 	ns_set put $bind_vars bread_crum_path $bread_crum_path_upfolder
 
@@ -590,7 +590,7 @@ switch $actions {
 
 	    set file_path $id_path($id)
 	    set file_path_list [split $file_path {/}]
-	    set len [expr [llength $file_path_list] - 2]
+	    set len [expr {[llength $file_path_list] - 2}]
 	    set path_list [lrange $file_path_list 0 $len]
 	    set path [join $path_list "/"]
 
@@ -600,7 +600,7 @@ switch $actions {
 	    if {!$admin_p} { continue }
 
 	    incr ctr
-	    append files_html "<tr $bgcolor([expr $ctr % 2])>
+	    append files_html "<tr $bgcolor([expr {$ctr % 2}])>
 <td>
   <input type=checkbox name=file_id.$id checked>
   <input type=hidden name=id_path.$id value=\"$id_path($id)\">
@@ -625,7 +625,7 @@ switch $actions {
                 set checked ""
  	    }
 	    incr ctr
-	    append dirs_html "<tr $bgcolor([expr $ctr % 2])>
+	    append dirs_html "<tr $bgcolor([expr {$ctr % 2}])>
 <td>
   <input type=checkbox name=dir_id.$id $checked>
   <input type=hidden name=id_path.$id value=\"$id_path($id)\">

@@ -19,7 +19,7 @@ ad_page_contract {
     project_id:integer {The project_id specified doesn't look like an integer.}
 }
 
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 set project_path [im_filestorage_project_path $project_id]
 
 set file "$project_path/$file_name"
@@ -44,7 +44,7 @@ insert into im_fs_actions (
 )"
 
 
-if [file readable $file] {
+if {[file readable $file]} {
     ad_returnfile 200 $guessed_file_type $file
 } else {
     ad_returnredirect "/error.tcl"

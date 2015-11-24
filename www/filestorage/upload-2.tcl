@@ -11,7 +11,7 @@ ad_page_contract {
 } 
 
 
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 set user_is_admin_p [im_is_user_site_wide_or_intranet_admin $user_id]
 set page_title "Upload into '$folder'"
 
@@ -55,7 +55,7 @@ set guessed_file_type [ns_guesstype $upload_file]
 set n_bytes [file size $tmp_filename]
 
 # strip off the C:\directories... crud and just get the file name
-if ![regexp {([^//\\]+)$} $upload_file match client_filename] {
+if {![regexp {([^//\\]+)$} $upload_file match client_filename]} {
     # couldn't find a match
     set client_filename $upload_file
 }

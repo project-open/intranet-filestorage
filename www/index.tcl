@@ -38,7 +38,7 @@ ad_page_contract {
     { file_id 0 }
 }
 
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 set return_url "/intranet-filestorage/"
 set current_url_without_vars [ns_conn url]
 

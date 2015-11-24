@@ -11,7 +11,7 @@ ad_page_contract {
     return_url
 }
 
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 ns_log Notice "folder_status_update: return_url=$return_url"
 
 # ToDo: No permissions yet.
@@ -20,7 +20,7 @@ ns_log Notice "folder_status_update: return_url=$return_url"
 
 
 # change the folder status from open to close and vice versa
-if { $status == "o" } {
+if { $status eq "o" } {
     set status "c"
 } else {
     set status "o"

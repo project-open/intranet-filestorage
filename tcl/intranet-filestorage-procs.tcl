@@ -255,14 +255,14 @@ proc intranet_download { folder_type } {
 	set platform [lindex $tcl_platform(platform) 0]
     
     set url "[ns_conn url]"
-    set user_id [ad_maybe_redirect_for_registration]
+    set user_id [auth::require_login]
 
     ns_log Notice "intranet_download: url=$url"
 
     # /intranet/download/projects/1934/source_en_US/help.rtf?
     # Using the group_id as selector for various storage types.
     set path_list [split $url {/}]
-    set len [expr [llength $path_list] - 1]
+    set len [expr {[llength $path_list] - 1}]
 
     # skip: +0:/ +1:intranet, +2:download, +3:folder_type, +4:<object_id>, +5:...
     set group_id [lindex $path_list 4]
@@ -1123,7 +1123,7 @@ where
 
     foreach workflow_dir $workflow_dirs {
 	foreach target_language $target_languages {
-	    if {[string equal $target_language "none"]} { continue }
+	    if {$target_language eq "none"} { continue }
 	    set dir "$project_dir/${workflow_dir}_$target_language"
 	    ns_log Notice "im_filestorage_create_directories: dir=$dir"
 	    if {![file exists $dir]} {
@@ -1258,7 +1258,7 @@ ad_proc -private im_filestorage_merge_perms { perms1 perms2 } {
     for {set ctr 0} {$ctr <= 3} {incr ctr} {
 	set perm1 [lindex $perms1 $ctr]
 	set perm2 [lindex $perms2 $ctr]
-	lappend perms [expr $perm1+$perm2]
+	lappend perms [expr {$perm1+$perm2}]
     }
     return $perms
 }
@@ -1555,7 +1555,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 
     set find_cmd [im_filestorage_find_cmd]
     set current_url_without_vars [ns_conn url]
-    set user_id [ad_maybe_redirect_for_registration]
+    set user_id [auth::require_login]
 
     # Extract the bread_crum variable and delete from URL variables
     set bind_vars [ns_conn form]
@@ -1579,7 +1579,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
     set user_is_customer_p [im_user_is_customer_p $user_id]
 
     # Customer shouldn't see their filestorage
-    if {[string equal "customer" $folder_type] || [string equal "user" $folder_type]} {
+    if {"customer" eq $folder_type || "user" eq $folder_type} {
 	if {!$user_is_employee_p} { return "" }
     }
 
@@ -1679,7 +1679,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 
 	# Hash: Path -> folder_id
 	set folder_id_hash($path) $folder_id
-	set last_folder_id [expr $folder_id * 10]
+	set last_folder_id [expr {$folder_id * 10}]
 	# ns_log Notice "im_filestorage_base_component: $path -> $folder_id"
     }
 
@@ -1741,7 +1741,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 	set current_depth [llength $rel_path_list]
 
 	# Get more information about the file
-	set file_body [lindex $rel_path_list [expr $current_depth -1]]
+	set file_body [lindex $rel_path_list $current_depth-1]
 	set file_type "file"
 	set file_size 0
 	set file_modified "invalid"
@@ -1755,7 +1755,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 	#}
 	if { [catch {
 	    set file_type [file type $file]
-	    set file_size [expr [file size $file] / 1024]
+	    set file_size [expr {[file size $file] / 1024}]
 	    set file_modified [ns_fmttime [file mtime $file] "%d/%m/%Y"]
 	    set file_extension [file extension $file]
 	} err_msg] } { 
@@ -1783,7 +1783,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 	    # is open or not.
 	    set visible_p $open_p_hash($last_parent_path)
 
-	    if {[string equal "o" $visible_p]} {
+	    if {"o" eq $visible_p} {
 		# Our parent was open, so this subdirectory becomes
 		# the new last_parent.
 		set last_parent_path $rel_path
@@ -1801,7 +1801,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 	}
 
 	# Now we know that we need to render this line.
-	if {![string equal "o" $visible_p]} { continue }
+	if {"o" ne $visible_p } { continue }
 
 
 	# ----------------------------------------------------
@@ -1819,11 +1819,11 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 	# We need this counter to mark rows as even/odd alternatingly
 	# and to provide a unique identifier for each line for the 
 	# file_id/dir_id/id_path construction.
-	set rowclass $bgcolor([expr $ctr % 2])
+	set rowclass $bgcolor([expr {$ctr % 2}])
 	incr ctr
 
 	# Actions executed if the file type is "directory"
-	if { [string compare $file_type "directory"] == 0 } {
+	if { $file_type eq "directory"  } {
 
 	    set dir_bread_crum_list [lrange $file_paths $base_path_depth [llength $file_paths]]
 	    set dir_bread_crum_path [join $dir_bread_crum_list "/"]
@@ -1877,7 +1877,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 
 	} else {
 	    # Skip the line if it's not a file
-	    if {![string equal $file_type "file"]} { continue }
+	    if {$file_type ne "file" } { continue }
 	    append files_html [im_filestorage_file_row \
 			      $file_body \
 			      $base_path \
@@ -1983,9 +1983,9 @@ ad_proc im_filestorage_dir_row {
 	incr i 
     } 
     set status $open_p
-    append line_html "<a href=/intranet-filestorage/folder_status_update?[export_vars -url {status object_id rel_path return_url}]>"
+    append line_html "<a href=/intranet-filestorage/[export_vars -base folder_status_update {status object_id rel_path return_url}]>"
 
-    if {$open_p == "o"} {
+    if {$open_p eq "o"} {
 	append line_html [im_gif foldin2]
     } else {
 	append line_html [im_gif foldout2]

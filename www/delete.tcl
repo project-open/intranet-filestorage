@@ -31,7 +31,7 @@ ad_page_contract {
 }
 
 # User id already verified by filters
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 set base_path [im_filestorage_base_path $folder_type $object_id]
 
 
@@ -61,7 +61,7 @@ foreach id [array names file_id] {
 
     set file_path $id_path($id)
     set file_path_list [split $file_path {/}]
-    set len [expr [llength $file_path_list] - 2]
+    set len [expr {[llength $file_path_list] - 2}]
     set path_list [lrange $file_path_list 0 $len]
     set path [join $path_list "/"]
 

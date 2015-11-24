@@ -99,7 +99,7 @@ where
 # -------------------------------------------------------
 
 # User id already verified by filters
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 
 # Get the list of all relevant roles and profiles for permissions
 set roles [im_filestorage_roles $user_id $object_id]
