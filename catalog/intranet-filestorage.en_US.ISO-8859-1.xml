@@ -44,11 +44,11 @@
   <msg key="lt_Remove_permissions_fr">Remove permissions from folders</msg>
   <msg key="lt_This_issue_is_most_li">This issue is most likely due to strange characters in the file. Please remove any accents etc. and try again.</msg>
   <msg key="lt_Unable_to_compress_th">Unable to compress the folder.</msg>
-  <msg key="lt_Unable_to_get_file_li">Unable to get file list from '%find_path%'</msg>
-  <msg key="lt_Unknown_folder_type_f">Unknown folder type \&quot;%folder_type%\&quot;.</msg>
-  <msg key="lt_Unknown_folder_type_f_1">Unknown folder_type \&quot;%folder_type%\&quot;.</msg>
-  <msg key="lt_Upload_into_my_folder">Upload into '%my_folder%'</msg>
-  <msg key="lt_Use_the_Browse_button">Use the 'Browse...' button to locate your file, then click 'Open'.</msg>
+  <msg key="lt_Unable_to_get_file_li">Unable to get file list from &#39;%find_path%&#39;</msg>
+  <msg key="lt_Unknown_folder_type_f">Unknown folder type \&#34;%folder_type%\&#34;.</msg>
+  <msg key="lt_Unknown_folder_type_f_1">Unknown folder_type \&#34;%folder_type%\&#34;.</msg>
+  <msg key="lt_Upload_into_my_folder">Upload into &#39;%my_folder%&#39;</msg>
+  <msg key="lt_Use_the_Browse_button">Use the &#39;Browse...&#39; button to locate your file, then click &#39;Open&#39;.</msg>
   <msg key="lt_You_have_not_selected">You have not selected a directory.</msg>
   <msg key="New_Folder">New Folder</msg>
   <msg key="No_files_found">No files found</msg>
