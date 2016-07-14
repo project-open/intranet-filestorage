@@ -44,11 +44,11 @@
   <msg key="lt_Remove_permissions_fr">Zugriffsberechtigungen verweigern</msg>
   <msg key="lt_This_issue_is_most_li">Dieses Problem ist wahrscheinlich auf ungeöhnliche Zeichen im Dateinamen zurückzuführen. Bitte entfernen Sie alle Akzente, Umlaute etc. und probieren sie wieder.</msg>
   <msg key="lt_Unable_to_compress_th">Das Verzeichniss kann nicht komprimiert werden.</msg>
-  <msg key="lt_Unable_to_get_file_li">Es war nicht möglich, die Liste der Dateien im Verzeichnisses '%find_path%' zu lesen.</msg>
-  <msg key="lt_Unknown_folder_type_f">Unbekannter Verzeichnistyp \&quot;%folder_type%\&quot;.</msg>
-  <msg key="lt_Unknown_folder_type_f_1">Unbekannter Verzeichnistyp \&quot;%folder_type%\&quot;.</msg>
-  <msg key="lt_Upload_into_my_folder">Hochladen in das Verzeichnis '%my_folder%' </msg>
-  <msg key="lt_Use_the_Browse_button">Benutzen sie den 'Browse...' Button um eine Datei auszuwählen und klicken sie auf 'Öffnen'.</msg>
+  <msg key="lt_Unable_to_get_file_li">Es war nicht möglich, die Liste der Dateien im Verzeichnisses &#39;%find_path%&#39; zu lesen.</msg>
+  <msg key="lt_Unknown_folder_type_f">Unbekannter Verzeichnistyp \&#34;%folder_type%\&#34;.</msg>
+  <msg key="lt_Unknown_folder_type_f_1">Unbekannter Verzeichnistyp \&#34;%folder_type%\&#34;.</msg>
+  <msg key="lt_Upload_into_my_folder">Hochladen in das Verzeichnis &#39;%my_folder%&#39; </msg>
+  <msg key="lt_Use_the_Browse_button">Benutzen sie den &#39;Browse...&#39; Button um eine Datei auszuwählen und klicken sie auf &#39;Öffnen&#39;.</msg>
   <msg key="lt_You_have_not_selected">Sie haben kein Verzeichnis ausgewählt</msg>
   <msg key="New_Folder">Neues Verzeichnis</msg>
   <msg key="No_files_found">Keine Dateien gefunden</msg>
