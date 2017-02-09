@@ -24,7 +24,7 @@
         <callbacks>
         </callbacks>
         <parameters>
-            <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="BackupBasePathUnix"  description="BackupBasePathUnix"/>
+            <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="BackupBasePathUnix" default="/web/projop/filestorage/backup" description="BackupBasePathUnix"/>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="BugBasePathUnix"  default="/web/projop/filestorage/bugs" description="Base path for Bug-Tracker filestorage"/>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="CompanyBasePathUnix"  default="/web/projop/filestorage/companies" description="Where to find the files for the 'Company'-Filestorages? Example: '/web/projop/filestorage/companies' (separate FS) or '/web/projop/filestorage/projects' (together with projects, suitable for small installations). No trailing slash, please."/>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="ConfItemBasePathUnix"  default="/web/projop/filestorage/conf_items" description="Where to find the files for the 'Conf Item'-Filestorages? Example: '/web/projop/filestorage/conf_items'. No trailing slash, please."/>
