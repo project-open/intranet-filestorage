@@ -44,11 +44,11 @@
   <msg key="lt_Remove_permissions_fr">移除目录的权限</msg>
   <msg key="lt_This_issue_is_most_li">本问题可能缘由文件名中有特殊字符.请移除任何可能的特殊字符等然后再试一次.</msg>
   <msg key="lt_Unable_to_compress_th">无法压缩目录</msg>
-  <msg key="lt_Unable_to_get_file_li">无法获取文件列表 '%find_path%'</msg>
-  <msg key="lt_Unknown_folder_type_f">未知目录类型 \&quot;%folder_type%\&quot;.</msg>
-  <msg key="lt_Unknown_folder_type_f_1">未知 folder_type \&quot;%folder_type%\&quot;.</msg>
-  <msg key="lt_Upload_into_my_folder">上传到 '%my_folder%'</msg>
-  <msg key="lt_Use_the_Browse_button">使用 '浏览...'  按钮来定位您的文件,然后点击 '打开'.</msg>
+  <msg key="lt_Unable_to_get_file_li">无法获取文件列表 &#39;%find_path%&#39;</msg>
+  <msg key="lt_Unknown_folder_type_f">未知目录类型 \&#34;%folder_type%\&#34;.</msg>
+  <msg key="lt_Unknown_folder_type_f_1">未知 folder_type \&#34;%folder_type%\&#34;.</msg>
+  <msg key="lt_Upload_into_my_folder">上传到 &#39;%my_folder%&#39;</msg>
+  <msg key="lt_Use_the_Browse_button">使用 &#39;浏览...&#39;  按钮来定位您的文件,然后点击 &#39;打开&#39;.</msg>
   <msg key="lt_You_have_not_selected">您没有选中目录</msg>
   <msg key="New_Folder">新目录</msg>
   <msg key="No_files_found">文件没有找到</msg>

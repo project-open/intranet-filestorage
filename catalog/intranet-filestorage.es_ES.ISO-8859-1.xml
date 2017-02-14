@@ -44,11 +44,11 @@
   <msg key="lt_Remove_permissions_fr">Eliminar los permisos asignados a las carpetas</msg>
   <msg key="lt_This_issue_is_most_li">Este problema es debido muy posiblemente a que el archivo contiene caracteres extraños. Elimine por favor los acentos, etc. y reinténtelo.</msg>
   <msg key="lt_Unable_to_compress_th">No puedo comprimir la carpeta.</msg>
-  <msg key="lt_Unable_to_get_file_li">No puedo obtener el listado de archivos de '%find_path%'</msg>
-  <msg key="lt_Unknown_folder_type_f">Tipo de carpeta \&quot;%folder_type%\&quot; desconocido.</msg>
-  <msg key="lt_Unknown_folder_type_f_1">Tipo de carpeta \&quot;%folder_type%\&quot; desconocido.</msg>
-  <msg key="lt_Upload_into_my_folder">Subir a '%my_folder%'</msg>
-  <msg key="lt_Use_the_Browse_button">Utilice el botón 'Examinar...' para localizar su archivo y, a continuación, haga clic sobre 'Abrir'.</msg>
+  <msg key="lt_Unable_to_get_file_li">No puedo obtener el listado de archivos de &#39;%find_path%&#39;</msg>
+  <msg key="lt_Unknown_folder_type_f">Tipo de carpeta \&#34;%folder_type%\&#34; desconocido.</msg>
+  <msg key="lt_Unknown_folder_type_f_1">Tipo de carpeta \&#34;%folder_type%\&#34; desconocido.</msg>
+  <msg key="lt_Upload_into_my_folder">Subir a &#39;%my_folder%&#39;</msg>
+  <msg key="lt_Use_the_Browse_button">Utilice el botón &#39;Examinar...&#39; para localizar su archivo y, a continuación, haga clic sobre &#39;Abrir&#39;.</msg>
   <msg key="lt_You_have_not_selected">No ha seleccionado un directorio.</msg>
   <msg key="New_Folder">Nueva carpeta</msg>
   <msg key="No_files_found">No se han encontrado archivos</msg>

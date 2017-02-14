@@ -43,11 +43,11 @@
   <msg key="lt_Remove_permissions_fr">Verwijder toegangsrechten van de mappen</msg>
   <msg key="lt_This_issue_is_most_li">Dit wordt waarschijnlijk veroorzaakt door vreemde karakters in het bestand. Verwijder alle aanhalingstekens etc. en probeer het dan opnieuw.</msg>
   <msg key="lt_Unable_to_compress_th">Niet mogelijk om de map te comprimeren</msg>
-  <msg key="lt_Unable_to_get_file_li">Niet mogelijk om de bestandslijst te verkrijgen van '%find_path%'</msg>
-  <msg key="lt_Unknown_folder_type_f">Onbekend type map \&quot;%folder_type%\&quot;.</msg>
-  <msg key="lt_Unknown_folder_type_f_1">Onbekend type map \&quot;%folder_type%\&quot;.</msg>
-  <msg key="lt_Upload_into_my_folder">Upload in '%my_folder%'</msg>
-  <msg key="lt_Use_the_Browse_button">Gebruik de 'Browse...'knop om u bstand te vinden, klik dan op 'Open'.</msg>
+  <msg key="lt_Unable_to_get_file_li">Niet mogelijk om de bestandslijst te verkrijgen van &#39;%find_path%&#39;</msg>
+  <msg key="lt_Unknown_folder_type_f">Onbekend type map \&#34;%folder_type%\&#34;.</msg>
+  <msg key="lt_Unknown_folder_type_f_1">Onbekend type map \&#34;%folder_type%\&#34;.</msg>
+  <msg key="lt_Upload_into_my_folder">Upload in &#39;%my_folder%&#39;</msg>
+  <msg key="lt_Use_the_Browse_button">Gebruik de &#39;Browse...&#39;knop om u bstand te vinden, klik dan op &#39;Open&#39;.</msg>
   <msg key="lt_You_have_not_selected">U heft geen map geselecteerd.</msg>
   <msg key="New_Folder">Nieuwe map</msg>
   <msg key="No_files_found">geen bestanden gevonden</msg>

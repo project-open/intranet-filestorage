@@ -35,7 +35,7 @@
   <msg key="lt_Directory_is_not_empt">La cartella non è vuota</msg>
   <msg key="lt_Download_all_files_as">Scarica tutti i file in un unico *.zip</msg>
   <msg key="lt_If_you_want_to_upload">Se vuoi caricare un file in una sottocartella,</msg>
-  <msg key="lt_Internal_Error____Una">Errore interno#_: &amp;lt;#_ impossibile determinare il percorso per l'azienda \#%company_id%</msg>
+  <msg key="lt_Internal_Error____Una">Errore interno#_: &amp;lt;#_ impossibile determinare il percorso per l&#39;azienda \#%company_id%</msg>
   <msg key="lt_No_Directories_Select">Nessuna cartella selezionata</msg>
   <msg key="lt_Please_back_up_and_se">Tornare indietro e selezionare file e cartelle da eliminare</msg>
   <msg key="lt_Please_backup_select_">Tornare indietro, selezionare una cartella e fare clic di nuovo sul bottone %im_gif_plus_9%.</msg>
@@ -44,11 +44,11 @@
   <msg key="lt_Remove_permissions_fr">Togliere autorizzazioni alle cartelle</msg>
   <msg key="lt_This_issue_is_most_li">Questo probabilmente è dovuto alla presenza di caratteri strani nel file. Eliminare tutti gli accenti, ecc. e riprovare.</msg>
   <msg key="lt_Unable_to_compress_th">Impossibile comprimere la cartella.</msg>
-  <msg key="lt_Unable_to_get_file_li">Impossibile scaricare l'elenco di file da '%find_path%'</msg>
+  <msg key="lt_Unable_to_get_file_li">Impossibile scaricare l&#39;elenco di file da &#39;%find_path%&#39;</msg>
   <msg key="lt_Unknown_folder_type_f">Tipo di cartella sconosciuto \&amp;quot;%folder_type%\&amp;quot;.</msg>
   <msg key="lt_Unknown_folder_type_f_1">Tipo di cartella sconosciuto \&amp;quot;%folder_type%\&amp;quot;.</msg>
-  <msg key="lt_Upload_into_my_folder">Caricare in '%my_folder%'</msg>
-  <msg key="lt_Use_the_Browse_button">Usare il pulsante 'Sfoglia...' per trovare il file, quindi fare clic su 'Apri'.</msg>
+  <msg key="lt_Upload_into_my_folder">Caricare in &#39;%my_folder%&#39;</msg>
+  <msg key="lt_Use_the_Browse_button">Usare il pulsante &#39;Sfoglia...&#39; per trovare il file, quindi fare clic su &#39;Apri&#39;.</msg>
   <msg key="lt_You_have_not_selected">Non è stata selezionata nessuna cartella.</msg>
   <msg key="New_Folder">Nuova cartella</msg>
   <msg key="No_files_found">Nessun file trovato</msg>
