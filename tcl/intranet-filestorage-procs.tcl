@@ -70,7 +70,13 @@ ad_proc -public im_filestorage_find_cmd {} {
     Returns the Unix/Linux/Windows find command as specified in the
     intranet-core.FindCmd command
 } {
+    return [util_memoize im_filestorage_find_cmd_helper 3600]
+}
 
+ad_proc -public im_filestorage_find_cmd_helper {} {
+    Returns the Unix/Linux/Windows find command as specified in the
+    intranet-core.FindCmd command
+} {
     # -------------------------------------------------
     # First check for a default value for each platform:
     global tcl_platform
@@ -92,7 +98,7 @@ ad_proc -public im_filestorage_find_cmd {} {
 		# Just run find on itself - this should return exactly one file
 		set winaoldir $::env(AOLDIR)
 		set unixaoldir [string map {\\ /} ${winaoldir}]
-		set file_list [exec $find_cmd ${unixaoldir}/bin/${find_cmd}.exe -maxdepth 0]
+		set file_list [im_exec $find_cmd ${unixaoldir}/bin/${find_cmd}.exe -maxdepth 0]
 	    } err_msg]} {
 		return $find_cmd
 	    }
@@ -106,7 +112,7 @@ ad_proc -public im_filestorage_find_cmd {} {
 
     if { ![catch {
 	# Just run find on itself - this should return exactly one file
-        set file_list [exec $find_cmd $find_cmd -maxdepth 0]
+        set file_list [im_exec $find_cmd $find_cmd -maxdepth 0]
     } err_msg]} { 
 	return $find_cmd
     }
@@ -119,7 +125,7 @@ ad_proc -public im_filestorage_find_cmd {} {
     if { [catch {
 
 	# Just run find on itself - this should return exactly one file
-        set file_list [exec $find_cmd $find_cmd -maxdepth 0]
+        set file_list [im_exec $find_cmd $find_cmd -maxdepth 0]
 
     } err_msg]} { 
 	ad_return_complaint 1 "<B>Configuration Error</b>:
@@ -300,8 +306,6 @@ proc intranet_download { folder_type } {
 }
 
 
-
-
 ad_proc -public im_package_filestorage_id { } {
 } {
     return [util_memoize im_package_filestorage_id_helper]
@@ -356,17 +360,17 @@ ad_proc -public im_filestorage_find_files { project_id } {
 } {
     set project_path [im_filestorage_project_path $project_id]
     set find_cmd [im_filestorage_find_cmd]
+
     if { [catch {
 	ns_log Notice "im_filestorage_find_files: Checking $project_path"
 
-	exec /bin/mkdir -p $project_path
-        exec /bin/chmod ug+w $project_path
-	set file_list [exec $find_cmd $project_path -noleaf -type f]
+	file mkdir $project_path
+        im_exec chmod ug+w $project_path
+	set file_list [im_exec $find_cmd $project_path -noleaf -type f]
 
     } err_msg] } {
 	# Probably some permission errors - return empty string
-	set err "'exec $find_cmd $project_path -noleaf -type f' failed with error:
-	err_msg=$err_msg\n"
+	ns_log Error "im_filestorage_find_files: 'file mkdir $project_path; chmod ug+w $project_path; $find_cmd $project_path -noleaf -type f' failed with error: err_msg=$err_msg\n"
 	set file_list ""
     }
 
@@ -1000,10 +1004,8 @@ ad_proc im_filestorage_copy_source_directory { project_id sub_project_id } {
     if {"" != $source_language} {
 	ns_log Notice "im_filestorage_copy_directory: $source_dir -> $sub_source_dir"
 	if {[catch {
-
-	    ns_log Notice "im_filestorage_copy_source_directory: exec /bin/cp -r $source_dir/* $sub_source_dir/"
-	    exec /bin/cp -r "$source_dir" "$sub_source_dir"
-
+	    ns_log Notice "im_filestorage_copy_source_directory: im_exec cp -r $source_dir/* $sub_source_dir/"
+	    im_exec cp -r "$source_dir" "$sub_source_dir"
 	} err_msg]} { return $err_msg }
     }
     
@@ -1063,10 +1065,9 @@ where
     ns_log Notice "im_filestorage_create_directories: company_dir=$company_dir"
     if { [catch {
 	if {![file exists $company_dir]} { 
-	    ns_log Notice "exec /bin/mkdir -p $company_dir"
-	    exec /bin/mkdir -p $company_dir 
-	    ns_log Notice "exec /bin/chmod ug+w $company_dir"
-	    exec /bin/chmod ug+w $company_dir
+	    file mkdir $company_dir 
+	    ns_log Notice "im_exec chmod ug+w $company_dir"
+	    im_exec chmod ug+w $company_dir
 	}
     } err_msg] } { return $err_msg }
 
@@ -1075,10 +1076,9 @@ where
     ns_log Notice "im_filestorage_create_directories: project_dir=$project_dir"
     if { [catch { 
 	if {![file exists $project_dir]} {
-	    ns_log Notice "exec /bin/mkdir -p $project_dir"
-	    exec /bin/mkdir -p $project_dir 
-	    ns_log Notice "exec /bin/chmod ug+w $project_dir"
-	    exec /bin/chmod ug+w $project_dir 
+	    file mkdir $project_dir 
+	    ns_log Notice "im_exec chmod ug+w $project_dir"
+	    im_exec chmod ug+w $project_dir 
 	}
     } err_msg]} { return $err_msg }
 
@@ -1088,10 +1088,9 @@ where
     ns_log Notice "im_filestorage_create_directories: source_dir=$source_dir"
     if {[catch {
 	if {![file exists $source_dir]} {
-	    ns_log Notice "exec /bin/mkdir -p $source_dir"
-	    exec /bin/mkdir -p $source_dir
-	    ns_log Notice "exec /bin/chmod ug+w $source_dir"
-	    exec /bin/chmod ug+w $source_dir
+	    file mkdir $source_dir
+	    ns_log Notice "im_exec chmod ug+w $source_dir"
+	    im_exec chmod ug+w $source_dir
 	} 
     } err_msg]} { 
 	return $err_msg 
@@ -1104,10 +1103,9 @@ where
 	ns_log Notice "im_filestorage_create_directories: source_dir=$source_dir"
 	if {[catch {
 	    if {![file exists $source_dir]} {
-		ns_log Notice "exec /bin/mkdir -p $source_dir"
-		exec /bin/mkdir -p $source_dir
-		ns_log Notice "exec /bin/chmod ug+w $source_dir"
-		exec /bin/chmod ug+w $source_dir
+		file mkdir $source_dir
+		ns_log Notice "im_exec chmod ug+w $source_dir"
+		im_exec chmod ug+w $source_dir
 	    } 
 	} err_msg]} { return $err_msg }
     }
@@ -1128,10 +1126,9 @@ where
 	    ns_log Notice "im_filestorage_create_directories: dir=$dir"
 	    if {![file exists $dir]} {
 		if {[catch {
-		    ns_log Notice "exec /bin/mkdir -p $dir"
-		    exec /bin/mkdir -p $dir
-		    ns_log Notice "exec /bin/chmod ug+w $dir"
-		    exec /bin/chmod ug+w $dir
+		    file mkdir $dir
+		    ns_log Notice "im_exec chmod ug+w $dir"
+		    im_exec chmod ug+w $dir
 		} err_msg] 
 		} { return $err_msg }
 	    }
@@ -1615,9 +1612,9 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
 
     if { [catch {
 	# Executing the find command
-        exec /bin/mkdir -p $find_path
-        exec /bin/chmod ug+w $find_path
-	set file_list [exec $find_cmd $find_path -noleaf]
+        file mkdir $find_path
+        im_exec chmod ug+w $find_path
+	set file_list [im_exec $find_cmd $find_path -noleaf]
 	set files [lsort [split $file_list "\n"]]
 
     } err_msg] } { 
@@ -2157,14 +2154,6 @@ ad_proc im_filestorage_file_type_icon {ext} {
 }
 
 
-ad_proc im_filestorage_create_folder {folder folder_name} {
-    Create a new folder
-} {
-     if { [catch {
-	 exec mkdir $folder/$folder_name
-     } err_msg] } { return $err_msg }   
-}
-
 ad_proc im_filestorage_is_directory_empty {folder} {
 
 } {
@@ -2202,14 +2191,6 @@ ad_proc im_filestorage_delete_folder {project_id folder_id folder} {
 
     if { [catch {
 	ns_rmdir $folder
-    } err_msg] } { return $err_msg }
-}
-
-ad_proc im_filestorage_erase_files { project_id file_name } {
-
-} {
-    if { [catch {
-	exec rm $file_name 
     } err_msg] } { return $err_msg }
 }
 

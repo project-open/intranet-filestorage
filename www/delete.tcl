@@ -73,7 +73,7 @@ foreach id [array names file_id] {
 	return
     }
 
-    set erase [im_filestorage_erase_files $object_id $base_path/$id_path($id)]
+    im_exec rm "$base_path/$id_path($id)"
 }
 
 

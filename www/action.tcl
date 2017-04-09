@@ -350,21 +350,20 @@ switch $actions {
 	# Get folders with read permission
 	set dest_path {}
 	set folder_sql "
-		select
-			f.path as folder_path
-		from
-			im_fs_folder_perms p,
+		select	f.path as folder_path
+		from	im_fs_folder_perms p,
 			im_fs_folders f
-		where
-			f.object_id = :object_id
+		where	f.object_id = :object_id
 			and p.folder_id = f.folder_id
 			and p.profile_id in ([join $user_memberships ", "])
 			and p.read_p = '1'
 	"
 	db_foreach get_folders $folder_sql {
-	    lappend dest_path "$base_path/$folder_path"
+	    set path "$base_path/$folder_path"
+	    if {![file readable $path]} { continue }
+	    lappend dest_path $path
 	}
-
+	
 	# Permissions for all usual projects, companies etc.
 	set object_type [db_string acs_object_type "select object_type from acs_objects where object_id=:object_id"]
 	set perm_cmd "${object_type}_permissions \$user_id \$object_id object_view object_read object_write object_admin"
@@ -407,7 +406,6 @@ switch $actions {
 	    ad_script_abort
 	}
 	
-
 	# Determine a random .tgz zip_file
 	set r [ns_rand 10000000]
 	set zip_file "zip.$user_id.$r.tgz"
@@ -417,17 +415,18 @@ switch $actions {
 	set tmp_path [im_filestorage_tmp_path]
 	set zip_file_path "$tmp_path/$zip_file"
 	
-	# build exec command 
-	set tar_command  "/bin/tar czf $zip_file_path"
+	# build im_exec command 
+	set tar_command [list im_exec tar czf $zip_file_path -P]
 	foreach path $dest_path {
 	    lappend tar_command $path
 	}
 
 	if { [catch {
 	    ns_log Notice "intranet-filestorage/action: zip: About to execute tar_command=$tar_command"
-	    eval "exec [join $tar_command]"
+	    eval $tar_command
 	} err_msg] } {
-	    ns_log Error "------> $err_msg"
+	    ns_log Error "intranet-filestorage/action: Error executing '$tar_command': $err_msg"
+	    ad_return_complaint 1 "intranet-filestorage/action: <br>Error executing '$tar_command': $err_msg"
 	    # Nothing. We check if TAR was successfull if the file exists.
 	}
 	
@@ -577,6 +576,7 @@ switch $actions {
 
 	ad_returnredirect "$url_base?[export_url_bind_vars $bind_vars]"
     }
+
     "del" {
 
 	# --------------------- Delete --------------------- 
@@ -686,10 +686,5 @@ foreach var [ad_ns_set_keys $bind_vars] {
 }
 
 append vars "url_base=$url_base\n"
-
-db_release_unused_handles
-
 ad_return_complaint 1 "<pre>$vars</pre>"
-return
-
 set page_title "[_ intranet-filestorage.lt_Upload_into_my_folder]"

@@ -131,12 +131,11 @@ set dest_path "$base_path/$bread_crum_path"
 ns_log Notice "upload-zip-2: dest_path=$dest_path"
 ns_log Notice "upload-zip-2: tmp_filename=$tmp_filename"
 
-
 if { [catch {
-    ns_log Notice {upload-zip-2: /bin/bash -c "cd $dest_path; unzip -oL $tmp_filename"}
-    set unzip_result [exec /bin/bash -c "cd $dest_path; unzip -oL $tmp_filename"]
-    ns_log Notice "upload-zip-2: /bin/chmod ug+w $dest_path"
-    exec /bin/chmod ug+w $dest_path
+    ns_log Notice "upload-zip-2: bash -c 'cd $dest_path; unzip -oL $tmp_filename'"
+    set unzip_result [im_exec bash -c "cd $dest_path; unzip -oL $tmp_filename"]
+    ns_log Notice "upload-zip-2: chmod ug+w $dest_path"
+    im_exec chmod ug+w $dest_path
 } err_msg] } {
     # Probably some permission errors
     ad_return_complaint 1 "Error writing upload file:<br><pre>$err_msg</pre>"
