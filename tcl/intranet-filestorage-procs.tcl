@@ -1616,10 +1616,11 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
         im_exec chmod ug+w $find_path
 	set file_list [im_exec $find_cmd $find_path -noleaf]
 	set files [lsort [split $file_list "\n"]]
-
-    } err_msg] } { 
+    } err_msg] } {
+	ns_log Error "im_filestorage_base_component: find_path=$find_path, err_msg=$err_msg"
 	return "<ul><li>[_ intranet-filestorage.lt_Unable_to_get_file_li]:<br><pre>find_path=$find_path\n$err_msg</pre></ul>"
     }
+
 
     # remove the first (root path) from the list of files returned by "find".
     set files [lrange $files 1 [llength $files]]
