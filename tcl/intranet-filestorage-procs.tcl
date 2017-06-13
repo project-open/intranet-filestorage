@@ -2126,6 +2126,7 @@ ad_proc im_filestorage_file_type_icon {ext} {
 	"mp3" { set icon [im_gif exp-mp3] }
 	"odt" { set icon [im_gif exp-odt] }
 	"ods" { set icon [im_gif exp-ods] }
+	"odp" { set icon [im_gif exp-odp] }
 	"pdf" { set icon [im_gif exp-pdf] }
 	"ppt" { set icon [im_gif exp-ppt] }
         "pptx" { set icon [im_gif exp-ppt2007] }
