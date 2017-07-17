@@ -23,6 +23,7 @@
   <msg key="Full_Member">Volledig lid</msg>
   <msg key="Home_Filestorage">Thuispagina bestandsopslag</msg>
   <msg key="Internal_Error">Interne fout</msg>
+  <msg key="intranet-filestorage">Intranet bestandsopslag</msg>
   <msg key="Key_Account">Hoofd Account</msg>
   <msg key="lt_Add_permissions_to_fo">Toevoegen van toegangsrechten aan mappen</msg>
   <msg key="lt_Add_the_permissions_a">Toevoegen van toegangsrechten boven de volgende mappen:</msg>
