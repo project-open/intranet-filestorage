@@ -132,8 +132,8 @@ ns_log Notice "upload-zip-2: dest_path=$dest_path"
 ns_log Notice "upload-zip-2: tmp_filename=$tmp_filename"
 
 if { [catch {
-    ns_log Notice "upload-zip-2: bash -c 'cd $dest_path; unzip -oL $tmp_filename'"
-    set unzip_result [im_exec bash -c "cd $dest_path; unzip -oL $tmp_filename"]
+    ns_log Notice "upload-zip-2: bash -c 'cd $dest_path; unzip -o $tmp_filename'"
+    set unzip_result [im_exec bash -c "cd $dest_path; unzip -o $tmp_filename"]
     ns_log Notice "upload-zip-2: chmod ug+w $dest_path"
     im_exec chmod ug+w $dest_path
 } err_msg] } {
