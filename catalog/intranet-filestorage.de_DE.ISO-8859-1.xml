@@ -25,7 +25,7 @@
   <msg key="Internal_Error">Interner Fehler</msg>
   <msg key="intranet-filestorage">Intranet-Dateiablage</msg>
   <msg key="Key_Account">Kundenbetreuer</msg>
-  <msg key="lt_Add_permissions_to_fo">Zugriffberechtigungen erteilen</msg>
+  <msg key="lt_Add_permissions_to_fo">Zugriffsberechtigungen erteilen</msg>
   <msg key="lt_Add_the_permissions_a">Berechtigungen zu den folgenden Verzeichnissen hinzufügen</msg>
   <msg key="lt_by_marking_the_checkb">durch das anklicken der Checkbox auf der linken Seite</msg>
   <msg key="lt_Create_a_new_document">Neues Dokument</msg>
