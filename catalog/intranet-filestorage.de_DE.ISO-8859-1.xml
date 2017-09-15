@@ -5,7 +5,7 @@
   <msg key="Admin">Admin</msg>
   <msg key="Bug_number">Bug Nummer %bug_number%</msg>
   <msg key="Create_a_new_folder">Neues Verzeichnis</msg>
-  <msg key="Create_Folder">Ordner erstellen</msg>
+  <msg key="Create_Folder">Neuer Ordner</msg>
   <msg key="create_folder">Neues Verzeichnis</msg>
   <msg key="Customers">Kunden</msg>
   <msg key="Del_Permissions">Berechtigungen löschen</msg>
@@ -21,6 +21,7 @@
   <msg key="Folder_up">Verzeichnis hoch</msg>
   <msg key="Freelancers">Freiberufler</msg>
   <msg key="Full_Member">Vollmitglied</msg>
+  <msg key="Home">Übersicht</msg>
   <msg key="Home_Filestorage">Dateiablage</msg>
   <msg key="Internal_Error">Interner Fehler</msg>
   <msg key="intranet-filestorage">Intranet-Dateiablage</msg>

@@ -381,7 +381,7 @@ ad_proc im_filestorage_home_component { user_id } {
     Filestorage for global corporate files
 } {
     set base_path [im_filestorage_home_path]
-    set object_name "Home"
+    set object_name [lang::message::lookup "" intranet-filestorage.Home "Home"]
     set folder_type "home"
     set object_id [ad_conn subsite_id]
     set object_id 0
