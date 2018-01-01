@@ -1293,9 +1293,9 @@ ad_proc -public im_filestorage_path_perms { path perm_hash_array roles profiles}
     @param roles list of [role_id role_gif role_name] triples for each role
     @param profiles list of [profile_id profile_gif profile_name] triples 
 } {
-    ns_log Notice "im_filestorage_path_perms: roles=$roles"
-    ns_log Notice "im_filestorage_path_perms: profiles=$profiles"
-    ns_log Notice "im_filestorage_path_perms: perm_hash_array=$perm_hash_array"
+    # ns_log Notice "im_filestorage_path_perms: roles=$roles"
+    # ns_log Notice "im_filestorage_path_perms: profiles=$profiles"
+    # ns_log Notice "im_filestorage_path_perms: perm_hash_array=$perm_hash_array"
 
     # The perm_hash represents the content of the im_fs_folder_perms
     # The default is "{} -> {1 1 1 1}", representing full permissions
@@ -1325,7 +1325,7 @@ ad_proc -public im_filestorage_path_perms { path perm_hash_array roles profiles}
 	    }
 	}
 	set perms($profile_id) $path_perms
-	ns_log Notice "im_filestorage_path_perms: perms=[array get perms]"
+	# ns_log Notice "im_filestorage_path_perms: perms=[array get perms]"
     }
 
     foreach role $roles {
@@ -1355,7 +1355,7 @@ ad_proc -public im_filestorage_path_perms { path perm_hash_array roles profiles}
 	    }
 	}
 	set perms($role_id) $path_perms
-	ns_log Notice "im_filestorage_path_perms: perms=[array get perms]"
+	# ns_log Notice "im_filestorage_path_perms: perms=[array get perms]"
 
     }
 
