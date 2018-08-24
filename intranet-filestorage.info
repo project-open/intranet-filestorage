@@ -10,7 +10,7 @@
     <inherit-templates-p>t</inherit-templates-p>
     <auto-mount>intranet-filestorage</auto-mount>
 
-    <version name="5.0.2.4.0" url="http://www.project-open.net/download/apm/intranet-filestorage-5.0.2.4.0.apm">
+    <version name="5.0.2.4.1" url="http://www.project-open.net/download/apm/intranet-filestorage-5.0.2.4.1.apm">
         <owner url="mailto:frank.bergmann@project-open.com">Frank Bergmann</owner>
         <summary>Filesystem folders for business objects</summary>
         <release-date>2004-01-29</release-date>
@@ -37,6 +37,7 @@
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="EventBasePathUnix"  default="/web/projop/filestorage/events" description="Where to find the files for the 'Event'-Filestorages? Example: '/web/projop/filestorage/events'. No trailing slash, please."/>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="TmpPathUnix"  default="/tmp" description="Tmp directory. Example: '/tmp' for Linux or 'C:/project-open/tmp' for Windows. No trailing slash, please."/>
             <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="UserBasePathUnix"  default="/web/projop/filestorage/users" description="Where to find the files for the 'User'-Filestorages? Example: '/web/projop/filestorage/users'. No trailing slash, please."/>
+            <parameter scope="instance" datatype="string"  min_n_values="1"  max_n_values="1"  name="RiskBasePathUnix"  default="/web/projop/filestorage/risks" description="Where to find the files for the 'Risk'-Filestorages? Example: '/web/projop/filestorage/risks'. No trailing slash, please."/>
         </parameters>
 
     </version>
