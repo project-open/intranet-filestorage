@@ -1607,7 +1607,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
     set return_url [im_url_with_query]
 
     if {"" == $bread_crum_path} {
-        set bread_crum_path [ns_set get $bind_vars bread_crum_path]
+        set bread_crum_path [im_opt_val -limit_to nohtml bread_crum_path]
     }
     if {[im_security_alert_check_path -location "intranet-filestorage.im_filestorage_base_component" -value $bread_crum_path]} {
 	set bread_crum_path ""

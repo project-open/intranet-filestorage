@@ -67,7 +67,7 @@ array set perm_hash $perm_hash_array
 
 
 foreach var [ad_ns_set_keys $bind_vars] {
-    set value [ns_set get $bind_vars $var]
+    set value [im_opt_val -limit_to nohtml $var]
     if {[regexp {first_line_flag} $var]} {
 	ns_set delkey $bind_vars $var
     }
@@ -679,7 +679,7 @@ Are you sure you really want to delete the following files?
 
 set ctr 0
 foreach var [ad_ns_set_keys $bind_vars] {
-    set value [ns_set get $bind_vars $var]
+    set value [im_opt_val -limit_to nohtml $var]
     if {$ctr > 0} { append vars "&" }
     append vars "$var=$value\n"
     incr ctr
