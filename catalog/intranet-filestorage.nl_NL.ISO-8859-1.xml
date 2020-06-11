@@ -21,6 +21,7 @@
   <msg key="Folder_up">Een map omhoog</msg>
   <msg key="Freelancers">Freelancers</msg>
   <msg key="Full_Member">Volledig lid</msg>
+  <msg key="Home">Home</msg>
   <msg key="Home_Filestorage">Thuispagina bestandsopslag</msg>
   <msg key="Internal_Error">Interne fout</msg>
   <msg key="intranet-filestorage">Intranet bestandsopslag</msg>
@@ -59,6 +60,7 @@
   <msg key="Submit_and_Upload">Uitgeven en uploaden</msg>
   <msg key="Upload_a_file">Upload een bestand</msg>
   <msg key="Upload_File">Upload bestand</msg>
+  <msg key="Upload_ZIP">Upload ZIP bestand</msg>
   <msg key="View">Bekijken </msg>
   <msg key="Write">Schrijven</msg>
 </message_catalog>
