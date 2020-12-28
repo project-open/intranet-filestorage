@@ -7,12 +7,7 @@
 
 ad_page_contract {
     Single point of entry for all FS related actions.
-    We need this, because we are using form buttons
-    instead of JavaScript, so that there is only a
-    single target for the form.
-
     @param submit (up-folder, new-folder, upload, new-doc, del, zip)
-
     @author pvilarmau@hotmail.com
     @author santitrenchs@santitrenchs.com
     @author frank.bergmann@project-open.com
