@@ -1181,31 +1181,35 @@ ad_proc im_filestorage_tool_tds { folder folder_type project_id return_url up_li
     Returns a formatted HTML component with a number of GIFs.
 } {
     return "
-   <td align=center>
-     <input type=hidden name=actions value=\"none\">
-   </td>
-<!-- 
-  Folder-up has some particular problems because it is actively
-  modifying the URL variables. Doesn't work yet 100%, so better
-  disable meanwhile...
-   <td>
-     <input type=image src=/intranet/images/upfolder.gif width=21 height=21 onClick=\"window.document.fs_${folder_type}.actions.value='up-folder'; submit();\" title='[_ intranet-filestorage.Folder_up]' alt='[_ intranet-filestorage.Folder_up]'>
-   </td> 
--->
-    <td><input type=image src=/intranet/images/folder-add.png width=16 height=16 onClick=\"window.document.fs_${folder_type}.actions.value='new-folder'; submit();\" title='[_ intranet-filestorage.Create_a_new_folder]' alt='[_ intranet-filestorage.Create_a_new_folder]'>
-   </td><td><input type=image src=/intranet/images/add.png width=16 height=16 onClick=\"window.document.fs_${folder_type}.actions.value='upload'; submit();\" title='[_ intranet-filestorage.Upload_a_file]' alt='[_ intranet-filestorage.Upload_a_file]'>
-   </td>
-<!--
-   <td><input type=image src=/intranet/images/new-doc.gif width=21 height=21 onClick=\"window.document.fs_${folder_type}.actions.value='new-doc'; submit();\" title='[_ intranet-filestorage.lt_Create_a_new_document]' alt='[_ intranet-filestorage.lt_Create_a_new_document]'>
-   </td> 
--->
-   <td><input type=image src=/intranet/images/cancel.png width=16 height=16 onClick=\"window.document.fs_${folder_type}.actions.value='del'; submit();\" title='[_ intranet-filestorage.lt_Delete_files_and_fold]' alt='[_ intranet-filestorage.lt_Delete_files_and_fold]'>
-   </td><td><input type=image src=/intranet/images/zip-download.gif width=16 height=16 onClick=\"window.document.fs_${folder_type}.actions.value='zip'; submit();\" title='[_ intranet-filestorage.lt_Download_all_files_as]' alt='[_ intranet-filestorage.lt_Download_all_files_as]'>
-   </td><td><input type=image src=/intranet/images/zip-upload.gif width=16 height=16 onClick=\"window.document.fs_${folder_type}.actions.value='unzip'; submit();\" title='[lang::message::lookup "" intranet-filestorage.Upload_ZIP "Upload ZIP"]' alt='[lang::message::lookup "" intranet-filestorage.Upload_ZIP "Upload ZIP"]'>
-   </td><td><input type=image src=/intranet/images/lock-add.png width=16 height=16 onClick=\"window.document.fs_${folder_type}.actions.value='add-perms'; submit();\" title='[_ intranet-filestorage.lt_Add_permissions_to_fo]' alt='[_ intranet-filestorage.lt_Add_permissions_to_fo]'>
-    </td><td><input type=image src=/intranet/images/lock-delete.png width=16 height=16 onClick=\"window.document.fs_${folder_type}.actions.value='del-perms'; submit();\" title='[_ intranet-filestorage.lt_Remove_permissions_fr]' alt='[_ intranet-filestorage.lt_Remove_permissions_fr]'>
-    </td>
-  </td>
+
+    <script type='text/javascript' nonce='[im_csp_nonce]'>
+
+        window.onload = function() {
+            var el = document.getElementById('fs_icon_add_folder');
+            if (el) { el.addEventListener('click', function (event) { window.document.fs_${folder_type}.actions.value='new-folder'; window.document.fs_${folder_type}.submit(); }); }
+            var el = document.getElementById('fs_icon_add_file');
+            if (el) { el.addEventListener('click', function (event) { window.document.fs_${folder_type}.actions.value='upload'; window.document.fs_${folder_type}.submit(); }); }
+            var el = document.getElementById('fs_icon_del');
+            if (el) { el.addEventListener('click', function (event) { window.document.fs_${folder_type}.actions.value='del'; window.document.fs_${folder_type}.submit(); }); }
+            var el = document.getElementById('fs_icon_zip_down');
+            if (el) { el.addEventListener('click', function (event) { window.document.fs_${folder_type}.actions.value='zip'; window.document.fs_${folder_type}.submit(); }); }
+            var el = document.getElementById('fs_icon_zip_up');
+            if (el) { el.addEventListener('click', function (event) { window.document.fs_${folder_type}.actions.value='unzip'; window.document.fs_${folder_type}.submit(); }); }
+            var el = document.getElementById('fs_icon_lock_add');
+            if (el) { el.addEventListener('click', function (event) { window.document.fs_${folder_type}.actions.value='add-perms'; window.document.fs_${folder_type}.submit(); }); }
+            var el = document.getElementById('fs_icon_lock_del');
+            if (el) { el.addEventListener('click', function (event) { window.document.fs_${folder_type}.actions.value='del-perms'; window.document.fs_${folder_type}.submit(); }); }
+        }
+    </script>
+
+  <td align=center><input type=hidden name=actions value=\"none\"></td>
+  <td><input id='fs_icon_add_folder' type=image src=/intranet/images/folder-add.png width=16 height=16 title='[_ intranet-filestorage.Create_a_new_folder]' alt='[_ intranet-filestorage.Create_a_new_folder]'></td>
+  <td><input id='fs_icon_add_file' type=image src=/intranet/images/add.png width=16 height=16 title='[_ intranet-filestorage.Upload_a_file]' alt='[_ intranet-filestorage.Upload_a_file]'></td>
+  <td><input id='fs_icon_del' type=image src=/intranet/images/cancel.png width=16 height=16 title='[_ intranet-filestorage.lt_Delete_files_and_fold]' alt='[_ intranet-filestorage.lt_Delete_files_and_fold]'></td>
+  <td><input id='fs_icon_zip_down' type=image src=/intranet/images/zip-download.gif width=16 height=16 title='[_ intranet-filestorage.lt_Download_all_files_as]' alt='[_ intranet-filestorage.lt_Download_all_files_as]'></td>
+  <td><input id='fs_icon_zip_up' type=image src=/intranet/images/zip-upload.gif width=16 height=16 title='[lang::message::lookup "" intranet-filestorage.Upload_ZIP "Upload ZIP"]' alt='[lang::message::lookup "" intranet-filestorage.Upload_ZIP "Upload ZIP"]'></td>
+  <td><input id='fs_icon_lock_add' type=image src=/intranet/images/lock-add.png width=16 height=16 title='[_ intranet-filestorage.lt_Add_permissions_to_fo]' alt='[_ intranet-filestorage.lt_Add_permissions_to_fo]'></td>
+  <td><input id='fs_icon_lock_del' type=image src=/intranet/images/lock-delete.png width=16 height=16 title='[_ intranet-filestorage.lt_Remove_permissions_fr]' alt='[_ intranet-filestorage.lt_Remove_permissions_fr]'></td>
 "
 }
 
