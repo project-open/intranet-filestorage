@@ -1583,7 +1583,15 @@ ad_proc -private im_filestorage_render_perms { perm } {
     return $result
 }
 
-ad_proc -public im_filestorage_base_component { user_id object_id object_name base_path folder_type { default_open "c"} {bread_crum_path ""} } {
+ad_proc -public im_filestorage_base_component {
+    user_id
+    object_id
+    object_name
+    base_path
+    folder_type
+    { default_open "c"}
+    {bread_crum_path ""}
+} {
     Main funcion to generate the filestorage page ( create folder, bread crum, ....)
     @param user_id: the user who is attempting to view the filestorage
     @param object_id: from wich group is pending this user?
@@ -1592,7 +1600,7 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
     @param bread_crum_path: a relative path, starting from the base_path
            "" = root directory, "dir1" = next directory, "dir1/dir2" = second next, etc.
 } {
-    ns_log Notice "im_filestorage_base_component uid=$user_id oid=$object_id object_name=$object_name base_path=$base_path folder_type=$folder_type bread_crum_path=$bread_crum_path"
+    ns_log Notice "im_filestorage_base_component: uid=$user_id oid=$object_id object_name=$object_name base_path=$base_path folder_type=$folder_type default_open=$default_open bread_crum_path='$bread_crum_path'"
 
     set bgcolor(0) "roweven"
     set bgcolor(1) "rowodd"
@@ -1611,7 +1619,14 @@ ad_proc -public im_filestorage_base_component { user_id object_id object_name ba
     set return_url [im_url_with_query]
 
     if {"" == $bread_crum_path} {
+
+	# bread_crum_path is set here locally, so im_opt_val would just take
+	# the empty variable. So we have to unset bread_crum_path so that
+	# im_opt_val will check the URL vars etc.
+	unset bread_crum_path
+	
         set bread_crum_path [im_opt_val -limit_to nohtml bread_crum_path]
+	# ns_log Notice "im_filestorage_base_component: got bread-crum from im_opt_val: bread_crum_path=$bread_crum_path"
     }
     if {[im_security_alert_check_path -location "intranet-filestorage.im_filestorage_base_component" -value $bread_crum_path]} {
 	set bread_crum_path ""
