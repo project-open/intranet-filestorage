@@ -363,16 +363,17 @@ ad_proc -public im_filestorage_find_files { project_id } {
     Returns a list of files in a project directory
 } {
     set project_path [im_filestorage_project_path $project_id]
+    set find_cmd [im_filestorage_find_cmd]
     if { [catch {
 	ns_log Notice "im_filestorage_find_files: Checking $project_path"
 
 	file mkdir $project_path
         im_exec chmod ug+w $project_path
-	set file_list [im_exec find $project_path -noleaf -type f]
+	set file_list [im_exec $find_cmd $project_path -noleaf -type f]
 
     } err_msg] } {
 	# Probably some permission errors - return empty string
-	ns_log Error "im_filestorage_find_files: 'file mkdir $project_path; chmod ug+w $project_path; find $project_path -noleaf -type f' failed with error: err_msg=$err_msg\n"
+	ns_log Error "im_filestorage_find_files: 'file mkdir $project_path; chmod ug+w $project_path; $find_cmd $project_path -noleaf -type f' failed with error: err_msg=$err_msg\n"
 	set file_list ""
     }
 
@@ -1672,15 +1673,16 @@ ad_proc -public im_filestorage_base_component {
 
     # Get the list of all files and split by end of line
     set find_path "$base_path$bread_crum_join$bread_crum_path"
+    set find_cmd [im_filestorage_find_cmd]
 
     if { [catch {
 	# Executing the find command
         file mkdir $find_path
         im_exec chmod ug+w $find_path
-	set file_list [im_exec find $find_path -noleaf]
+	set file_list [im_exec $find_cmd $find_path -noleaf]
 	set files [lsort [split $file_list "\n"]]
     } err_msg] } {
-	ns_log Error "im_filestorage_base_component: find_path=$find_path, err_msg=$err_msg"
+	ns_log Error "im_filestorage_base_component: find_cmd=$find_cmd, find_path=$find_path, err_msg=$err_msg"
 	return "<ul><li>[_ intranet-filestorage.lt_Unable_to_get_file_li]:<br><pre>find_path=$find_path\n$err_msg</pre></ul>"
     }
 
