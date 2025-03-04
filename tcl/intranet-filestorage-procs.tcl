@@ -68,90 +68,6 @@ ad_proc -private im_package_filestorage_id_helper {} {
     } -default 0]
 }
 
-
-ad_proc -public im_filestorage_find_cmd {} {
-    Returns the Unix/Linux/Windows find command as specified in the
-    intranet-core.FindCmd command
-} {
-    return [util_memoize im_filestorage_find_cmd_helper 3600]
-}
-
-ad_proc -public im_filestorage_find_cmd_helper {} {
-    Returns the Unix/Linux/Windows find command as specified in the
-    intranet-core.FindCmd command
-} {
-    # -------------------------------------------------
-    # First check for a default value for each platform:
-    global tcl_platform
-
-    set find_cmd ""
-    set platform [lindex $tcl_platform(platform) 0]
-    switch $platform {
-        unix { 
-	    # Let's use a Linux sefault
-	    set find_cmd "/usr/bin/find" 
-	}
-        windows { 
-	    # Windows default
-	    # 091022 fraber: Changes for Maurizios Windows installer
-	    set find_cmd "find" 
-
-	    # 091022 fraber: Maurizio's Windows installer
-	    if { ![catch {
-		# Just run find on itself - this should return exactly one file
-		set winaoldir $::env(AOLDIR)
-		set unixaoldir [string map {\\ /} ${winaoldir}]
-		set file_list [im_exec $find_cmd ${unixaoldir}/bin/${find_cmd}.exe -maxdepth 0]
-	    } err_msg]} {
-		return $find_cmd
-	    }
-
-	}
-        default { 
-	    # Probably some kind of Unix derivate
-	    set find_cmd "/usr/bin/find" 
-	}
-    }
-
-    if { ![catch {
-	# Just run find on itself - this should return exactly one file
-        set file_list [im_exec $find_cmd $find_cmd -maxdepth 0]
-    } err_msg]} { 
-	return $find_cmd
-    }
-
-    # -------------------------------------------------
-    # Check for an explicit the parameter
-    set find_cmd [parameter::get -package_id [im_package_core_id] -parameter "FindCmd" -default "/bin/find"]
-
-    # Make sure it works
-    if { [catch {
-
-	# Just run find on itself - this should return exactly one file
-        set file_list [im_exec $find_cmd $find_cmd -maxdepth 0]
-
-    } err_msg]} { 
-	ad_return_complaint 1 "<B>Configuration Error</b>:
-        <p>
-        Command '$find_cmd' does not seem to exist on this system.<br>
-        This error is probably due to a bad configuration of the 
-        parameter 'intranet-core.FindCmd' or due to the lack of the
-        file packages/acs-tcl/windows-procs.tcl (on a Win32 system).
-        </p>
-        <ul>
-          <li>Please contact your application administrator in order to
-              change the value of the parameter.
-        </ul>
-        <p>
-        Here is the error message for reference:
-        </p><br>
-        <pre>$err_msg</pre>"
-	return ""
-    }
-    return $find_cmd
-}
-
-
 ad_proc -public im_filestorage_profiles { user_id object_id } {
     Returns a list of profile_id-profile_gif-profile_name tuples
     for a given filestorage.
@@ -363,17 +279,14 @@ ad_proc -public im_filestorage_find_files { project_id } {
     Returns a list of files in a project directory
 } {
     set project_path [im_filestorage_project_path $project_id]
-    set find_cmd [im_filestorage_find_cmd]
     if { [catch {
 	ns_log Notice "im_filestorage_find_files: Checking $project_path"
-
 	file mkdir $project_path
         im_exec chmod ug+w $project_path
-	set file_list [im_exec $find_cmd $project_path -noleaf -type f]
-
+	set file_list [fileutil::find $project_path]
     } err_msg] } {
 	# Probably some permission errors - return empty string
-	ns_log Error "im_filestorage_find_files: 'file mkdir $project_path; chmod ug+w $project_path; $find_cmd $project_path -noleaf -type f' failed with error: err_msg=$err_msg\n"
+	ns_log Error "im_filestorage_find_files: 'file mkdir $project_path; chmod ug+w $project_path; $project_path -noleaf -type f' failed with error: err_msg=$err_msg\n"
 	set file_list ""
     }
 
@@ -1673,22 +1586,22 @@ ad_proc -public im_filestorage_base_component {
 
     # Get the list of all files and split by end of line
     set find_path "$base_path$bread_crum_join$bread_crum_path"
-    set find_cmd [im_filestorage_find_cmd]
-
     if { [catch {
 	# Executing the find command
         file mkdir $find_path
         im_exec chmod ug+w $find_path
-	set file_list [im_exec $find_cmd $find_path -noleaf]
-	set files [lsort [split $file_list "\n"]]
+	set file_list [fileutil::find $find_path]
+	set files [lsort $file_list]
+	# ad_return_complaint 1 "find_path=$find_path, files=$files"
     } err_msg] } {
-	ns_log Error "im_filestorage_base_component: find_cmd=$find_cmd, find_path=$find_path, err_msg=$err_msg"
+	ns_log Error "im_filestorage_base_component: find_path=$find_path, err_msg=$err_msg"
 	return "<ul><li>[_ intranet-filestorage.lt_Unable_to_get_file_li]:<br><pre>find_path=$find_path\n$err_msg</pre></ul>"
     }
 
-
     # remove the first (root path) from the list of files returned by "find".
-    set files [lrange $files 1 [llength $files]]
+    # Fraber 2025-03-04: Not necessary anymore
+    # set files [lrange $files 1 [llength $files]]
+    # ad_return_complaint 1 "find_path=$find_path, files=$files"
 
     # ------------------------------------------------------------------
     # Format the bread crum bar
