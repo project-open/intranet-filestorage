@@ -73,7 +73,8 @@ ad_proc -public im_filestorage_find_cmd {} {
     Returns the Unix/Linux/Windows find command as specified in the
     intranet-core.FindCmd command
 } {
-    return [util_memoize im_filestorage_find_cmd_helper 3600]
+    return [im_filestorage_find_cmd_helper]
+    # return [util_memoize im_filestorage_find_cmd_helper 3600]
 }
 
 ad_proc -public im_filestorage_find_cmd_helper {} {
@@ -1673,22 +1674,19 @@ ad_proc -public im_filestorage_base_component {
 
     # Get the list of all files and split by end of line
     set find_path "$base_path$bread_crum_join$bread_crum_path"
-    set find_cmd [im_filestorage_find_cmd]
-
     if { [catch {
 	# Executing the find command
         file mkdir $find_path
         im_exec chmod ug+w $find_path
-	set file_list [im_exec $find_cmd $find_path -noleaf]
-	set files [lsort [split $file_list "\n"]]
+	set files [lsort [fileutil::find $find_path]]
     } err_msg] } {
-	ns_log Error "im_filestorage_base_component: find_cmd=$find_cmd, find_path=$find_path, err_msg=$err_msg"
+	ns_log Error "im_filestorage_base_component: find_path=$find_path, err_msg=$err_msg"
 	return "<ul><li>[_ intranet-filestorage.lt_Unable_to_get_file_li]:<br><pre>find_path=$find_path\n$err_msg</pre></ul>"
     }
 
-
+    # ad_return_complaint 1 $files
     # remove the first (root path) from the list of files returned by "find".
-    set files [lrange $files 1 [llength $files]]
+    # set files [lrange $files 1 [llength $files]]
 
     # ------------------------------------------------------------------
     # Format the bread crum bar

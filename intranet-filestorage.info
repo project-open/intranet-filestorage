@@ -10,7 +10,7 @@
     <inherit-templates-p>t</inherit-templates-p>
     <auto-mount>intranet-filestorage</auto-mount>
 
-    <version name="5.2.0.0.2" url="https://www.project-open.net/download/apm/intranet-filestorage-5.2.0.0.2.apm">
+    <version name="5.2.0.0.3" url="https://www.project-open.net/download/apm/intranet-filestorage-5.2.0.0.3.apm">
         <owner url="mailto:frank.bergmann@project-open.com">Frank Bergmann</owner>
         <summary>Filesystem folders for business objects</summary>
         <release-date>2004-01-29</release-date>
